@@ -2,17 +2,21 @@ import sql from 'mssql';
 import { config } from '../config.js';
 
 /**
- * Pool de conexão pro banco legado Softwell (EDU_*).
- * Leitura de tabelas como GER_PESSOA_FISICA, EDU_ALUNO, etc.
+ * Pool de conexão pras tabelas legadas Softwell (GER_PESSOA_FISICA,
+ * EDU_ALUNO, FR_*).
  *
- * Conexão diferente do Prisma (que aponta pro EDC_* — banco do app).
- * Usa o connection string parser do mssql.
+ * Mesmo banco do Prisma — o que muda é o driver. As legadas ficam fora do
+ * schema Prisma de propósito, pra um `db push` não tentar dropá-las
+ * (ver comentário no topo de prisma/schema.prisma).
+ *
+ * Usa `config.LEGACY_DATABASE_URL`, que cai em `DATABASE_URL` quando não
+ * definida.
  */
 
 function parseSqlServerUrl(url: string): sql.config {
   // sqlserver://host:port;database=...;user=...;password=...;encrypt=...;trustServerCertificate=...
   const m = url.match(/^sqlserver:\/\/([^:;]+)(?::(\d+))?;(.+)$/);
-  if (!m) throw new Error(`LEGACY_DATABASE_URL malformada: ${url}`);
+  if (!m) throw new Error(`URL de conexão legada malformada: ${url}`);
   const [, host, port, paramsStr] = m;
   const params: Record<string, string> = {};
   for (const part of paramsStr.split(';')) {

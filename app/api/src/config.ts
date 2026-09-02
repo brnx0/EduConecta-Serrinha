@@ -13,8 +13,9 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   LOG_LEVEL: z.string().default('info'),
   DATABASE_URL: z.string().min(1),
-  // Banco legado Softwell (EDU_*) — leitura de Pessoa/Aluno via mssql pool
-  LEGACY_DATABASE_URL: z.string().min(1),
+  // Override opcional pro pool mssql legado. Banco é o mesmo do
+  // DATABASE_URL; só preencher se um dia legado e EDC_* forem separados.
+  LEGACY_DATABASE_URL: z.string().optional(),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET deve ter no mínimo 32 caracteres'),
   FR_WEBHOOK_SECRET: z
     .string()
@@ -34,6 +35,11 @@ const envSchema = z.object({
   SMTP_FROM: z.string().optional(),
 });
 
-export const config = envSchema.parse(process.env);
+const env = envSchema.parse(process.env);
 
-export type Config = z.infer<typeof envSchema>;
+export const config = {
+  ...env,
+  LEGACY_DATABASE_URL: env.LEGACY_DATABASE_URL || env.DATABASE_URL,
+};
+
+export type Config = typeof config;
