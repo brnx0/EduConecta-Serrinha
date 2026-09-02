@@ -55,7 +55,7 @@ cd EduConecta
 npm install
 ```
 
-(Workspaces npm baixam deps de api + mobile + elo automaticamente.)
+(Workspaces npm baixam deps de api + mobile automaticamente.)
 
 ---
 
@@ -123,18 +123,13 @@ Deve retornar `{token, ...}`.
 
 ---
 
-## 4. Mobile — escolhe app
+## 4. Mobile
 
-Dois apps no monorepo. Funcionalmente iguais, visuais diferentes:
-
-| App | Path | Brand | Status |
-|---|---|---|---|
-| **EduConecta** | `app/mobile` | Azul corporativo, layout original | legacy |
-| **Élo** | `app/elo` | Laranja Recreio + MenuSheet | atual recomendado |
+App único do monorepo: **EduConecta** em `app/mobile` (Expo SDK 54, azul corporativo).
 
 ### .env mobile (emulador Android)
 
-`app/elo/.env`:
+`app/mobile/.env`:
 ```
 EXPO_PUBLIC_NOTIF_API_URL="http://10.0.2.2:3333"
 ```
@@ -153,7 +148,7 @@ adb devices
 ### Build dev (primeira vez)
 
 ```powershell
-cd app\elo
+cd app\mobile
 npx expo prebuild --platform android --clean
 npx expo run:android
 ```
@@ -163,18 +158,18 @@ Tempo: ~5 min (Gradle baixa + compila). APK instala automático + abre app.
 ### Próximas vezes (já buildado)
 
 ```powershell
-npm run elo:start
+npm run mobile:start
 # OU
-cd app\elo
-npx expo start --dev-client
+cd app\mobile
+npx expo start
 ```
 
-App já instalado no emulador conecta automático ao Metro. Se ficar travado no splash laranja:
+App já instalado no emulador conecta automático ao Metro. Se ficar travado no splash:
 
 ```powershell
 adb reverse tcp:8081 tcp:8081
-adb shell am force-stop com.mtspxdev.Elo
-adb shell am start -W -a android.intent.action.VIEW -d "exp+elo://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081" com.mtspxdev.Elo
+adb shell am force-stop com.mtspxdev.EduConecta
+adb shell monkey -p com.mtspxdev.EduConecta 1
 ```
 
 ---
@@ -190,11 +185,11 @@ npm run api:dev
 
 **Terminal 2 — Mobile:**
 ```powershell
-cd C:\Projetos\EduConecta\app\elo
-npx expo start --dev-client
+cd C:\Projetos\EduConecta\app\mobile
+npx expo start
 ```
 
-Emulador aberto + app Élo instalado → tudo conectado.
+Emulador aberto + app EduConecta instalado → tudo conectado.
 
 ---
 
@@ -225,7 +220,7 @@ Path com `%ANDROID_HOME%\platform-tools` não exportado na sessão. Fecha + abre
 `wsl --update` + restart. Se persistir: Docker Desktop → Troubleshoot → Reset to factory.
 
 ### Build Android falha "SDK location not found"
-Cria `app/elo/android/local.properties`:
+Cria `app/mobile/android/local.properties`:
 ```
 sdk.dir=C\:\\Users\\<user>\\AppData\\Local\\Android\\Sdk
 ```
@@ -259,8 +254,7 @@ EduConecta/
 │       └── README.md         # detalhes Docker
 └── app/
     ├── api/                  # Fastify 5 + Prisma 5 + mssql (porta 3333)
-    ├── mobile/               # Expo SDK 54 — EduConecta (azul)
-    └── elo/                  # Expo SDK 54 — Élo (laranja, atual)
+    └── mobile/               # Expo SDK 54 — EduConecta (azul)
 ```
 
 ---

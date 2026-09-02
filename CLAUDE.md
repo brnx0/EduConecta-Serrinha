@@ -26,8 +26,7 @@ educonecta/
 ├── docker-compose.yml        # SQL Server 2022 dev
 ├── SETUP.md                  # guia setup máquina nova
 ├── app/
-│   ├── mobile/               # Expo RN — EduConecta (azul, legacy)
-│   ├── elo/                  # Expo RN — Élo (laranja, atual recomendado)
+│   ├── mobile/               # Expo RN — EduConecta (azul)
 │   └── api/                  # Fastify + Prisma — backend (porta 3333)
 ├── infra/
 │   └── sqlserver/            # docker compose + bootstrap + seed SQL
@@ -37,12 +36,9 @@ educonecta/
 Comandos via workspaces a partir da raiz:
 
 ```bash
-# Mobile EduConecta (legacy)
+# Mobile EduConecta
 npm run mobile:start          # expo start
-
-# Mobile Élo (atual)
-npm run elo:start             # expo start --dev-client
-npm run elo:android           # expo run:android
+npm run mobile:android        # expo run:android
 
 # API
 npm run api:dev               # tsx watch src/server.ts
@@ -51,7 +47,6 @@ npm run api:build             # tsc
 
 # Direto via workspace flag
 npm install --workspace app/mobile <pkg>
-npm install --workspace app/elo <pkg>
 npm install --workspace app/api <pkg>
 ```
 
@@ -67,7 +62,7 @@ Copy-Item infra\sqlserver\.env.docker.example app\api\.env
 # Rotina diária
 docker compose start sqlserver
 npm run api:dev               # terminal 1
-npm run elo:start             # terminal 2
+npm run mobile:start          # terminal 2
 ```
 
 Login DEV: CPF `12345678901` / senha `123456`.
