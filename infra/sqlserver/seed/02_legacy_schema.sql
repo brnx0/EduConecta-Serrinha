@@ -1,0 +1,295 @@
+/*
+ * 02_legacy_schema.sql
+ *
+ * Cria schemas mínimos das tabelas legadas Softwell (GER_* / EDU_*) usadas
+ * pela API e pelos repositórios `legacy*Repository.ts`. Apenas as colunas
+ * referenciadas em queries — não é o schema completo do produto.
+ *
+ * Idempotente: usa IF NOT EXISTS pra cada tabela.
+ */
+USE EDU_CORURIPE_M5_DEV;
+GO
+
+-- ─── GER_PESSOA (pessoa genérica) ─────────────────────────────────
+IF OBJECT_ID('dbo.GER_PESSOA', 'U') IS NULL
+CREATE TABLE GER_PESSOA (
+    PES_COD          INT NOT NULL PRIMARY KEY,
+    PES_NOME         NVARCHAR(255) NULL
+);
+GO
+
+-- ─── GER_PESSOA_FISICA (denormaliza responsável legal) ────────────
+IF OBJECT_ID('dbo.GER_PESSOA_FISICA', 'U') IS NULL
+CREATE TABLE GER_PESSOA_FISICA (
+    PES_COD          INT NOT NULL PRIMARY KEY,
+    PFI_APELIDO      NVARCHAR(120) NULL,
+    PFI_RESP         NVARCHAR(255) NULL,           -- nome do responsável
+    PFI_CPF          CHAR(11) NULL,                -- CPF da pessoa
+    PFI_CPF_RESP     CHAR(11) NULL,                -- CPF do responsável legal
+    PFI_NASCIMENTO   DATE NULL,
+    PFI_SEXO         CHAR(1) NULL,
+    CHECK_RESP       CHAR(1) NULL                  -- 'S' se aluno tem responsável legal
+);
+GO
+
+-- ─── EDU_ESCOLA ───────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_ESCOLA', 'U') IS NULL
+CREATE TABLE EDU_ESCOLA (
+    ESC_COD              INT NOT NULL PRIMARY KEY,
+    ESC_NOME_REDUZIDO    NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDU_CURSO ────────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_CURSO', 'U') IS NULL
+CREATE TABLE EDU_CURSO (
+    CUR_COD              INT NOT NULL PRIMARY KEY,
+    CUR_NOME_REDUZIDO    NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDU_SERIE ────────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_SERIE', 'U') IS NULL
+CREATE TABLE EDU_SERIE (
+    SER_COD                INT NOT NULL PRIMARY KEY,
+    SER_NOME               NVARCHAR(120) NULL,
+    SER_TOTAL_AULA_ANUAL   INT NULL
+);
+GO
+
+-- ─── EDU_TURMA ────────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_TURMA', 'U') IS NULL
+CREATE TABLE EDU_TURMA (
+    TMA_COD     INT NOT NULL PRIMARY KEY,
+    TMA_NOME    NVARCHAR(120) NULL,
+    CUR_COD     INT NULL
+);
+GO
+
+-- ─── EDU_AVISOS (mural de avisos) ─────────────────────────────────
+IF OBJECT_ID('dbo.EDU_AVISOS', 'U') IS NULL
+CREATE TABLE EDU_AVISOS (
+    AVI_COD       INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    TITULO        NVARCHAR(255) NULL,
+    AVISO         NVARCHAR(MAX) NULL,
+    IMAGEM        NVARCHAR(MAX) NULL,
+    DATA_CRIACAO  DATETIME2 NOT NULL DEFAULT GETDATE(),
+    DATA_INICIO   DATETIME2 NULL,
+    DATA_FIM      DATETIME2 NULL,
+    TODA_REDE     CHAR(1) NOT NULL DEFAULT 'N',
+    EDU_CONECTA   CHAR(1) NOT NULL DEFAULT 'S'
+);
+GO
+
+IF OBJECT_ID('dbo.EDU_AVISOS_ESCOLAS', 'U') IS NULL
+CREATE TABLE EDU_AVISOS_ESCOLAS (
+    AVE_COD INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    AVI_COD INT NOT NULL,
+    ESC_COD INT NOT NULL
+);
+GO
+
+IF OBJECT_ID('dbo.EDU_AVISOS_SEGMENTO', 'U') IS NULL
+CREATE TABLE EDU_AVISOS_SEGMENTO (
+    ACU_COD INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    AVI_COD INT NOT NULL,
+    CUR_COD INT NOT NULL
+);
+GO
+
+-- ─── EDU_TURNO ────────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_TURNO', 'U') IS NULL
+CREATE TABLE EDU_TURNO (
+    TUR_COD     INT NOT NULL PRIMARY KEY,
+    TUR_NOME    NVARCHAR(60) NULL
+);
+GO
+
+-- ─── EDU_TURMA_ALUNO_SITUACAO ─────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_TURMA_ALUNO_SITUACAO', 'U') IS NULL
+CREATE TABLE EDU_TURMA_ALUNO_SITUACAO (
+    TAS_COD         INT NOT NULL PRIMARY KEY,
+    TAS_DESCRICAO   NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDU_ALUNO ────────────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_ALUNO', 'U') IS NULL
+CREATE TABLE EDU_ALUNO (
+    PES_COD_ALUNO          INT NOT NULL PRIMARY KEY,
+    ALU_NUMERO_MATRICULA   NVARCHAR(60) NULL,
+    ALU_NOME               NVARCHAR(255) NULL
+);
+GO
+
+-- ─── EDU_TURMA_ALUNO (vínculo aluno x turma x ano letivo) ─────────
+IF OBJECT_ID('dbo.EDU_TURMA_ALUNO', 'U') IS NULL
+CREATE TABLE EDU_TURMA_ALUNO (
+    TMH_COD              INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    PES_COD_ALUNO        INT NOT NULL,
+    ESC_COD              INT NOT NULL,
+    CUR_COD              INT NOT NULL,
+    SER_COD              INT NOT NULL,
+    TMA_COD              INT NOT NULL,
+    TUR_COD              INT NOT NULL,
+    TMH_ANO_LETIVO       INT NOT NULL,
+    TMH_HABILITADO       CHAR(1) NOT NULL DEFAULT 'S',
+    TMH_SITUACAO         CHAR(1) NULL,             -- 'A','M','K','T','E', etc.
+    TMH_DATA_MATRICULA   DATETIME2 NULL,
+    TMH_DATA_SAIDA       DATETIME2 NULL,
+    TAS_COD_SAIDA        INT NULL
+);
+GO
+
+-- ─── EDU_DISCIPLINA ───────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_DISCIPLINA', 'U') IS NULL
+CREATE TABLE EDU_DISCIPLINA (
+    DIS_COD          INT NOT NULL PRIMARY KEY,
+    DIS_NOME         NVARCHAR(120) NULL,
+    DIS_NOME_MEC     NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDU_INSTRUMENTO_AVALIATIVO (atividades agendadas) ────────────
+IF OBJECT_ID('dbo.EDU_INSTRUMENTO_AVALIATIVO', 'U') IS NULL
+CREATE TABLE EDU_INSTRUMENTO_AVALIATIVO (
+    IAV_COD          INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    DIS_COD          INT NOT NULL,
+    TMA_COD          INT NOT NULL,
+    IAV_DATA         DATETIME2 NULL,
+    IAV_DESCRICAO    NVARCHAR(255) NULL
+);
+GO
+
+-- ─── EDU_DIARIO_CONTEUDO ──────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_DIARIO_CONTEUDO', 'U') IS NULL
+CREATE TABLE EDU_DIARIO_CONTEUDO (
+    DIC_COD          INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    TMA_COD          INT NOT NULL,
+    UNS_COD          INT NULL,
+    DIC_DATA         DATETIME2 NULL,
+    DIC_TEMA         NVARCHAR(255) NULL,
+    DIC_CONTEUDO     NVARCHAR(MAX) NULL,
+    DIC_DESENVOLVIMENTO NVARCHAR(MAX) NULL,
+    DIS_COD          INT NULL
+);
+GO
+
+-- ─── EDU_DIARIO_FREQUENCIA ────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_DIARIO_FREQUENCIA', 'U') IS NULL
+CREATE TABLE EDU_DIARIO_FREQUENCIA (
+    DIF_COD       INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    DIC_COD       INT NOT NULL,
+    TMH_COD       INT NOT NULL,
+    DIF_PRESENTE  CHAR(1) NOT NULL DEFAULT 'S'
+);
+GO
+
+-- ─── EDU_TIPO_OCORRENCIA_ALUNO ────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_TIPO_OCORRENCIA_ALUNO', 'U') IS NULL
+CREATE TABLE EDU_TIPO_OCORRENCIA_ALUNO (
+    TIPO_OCORRENCIA_COD INT NOT NULL PRIMARY KEY,
+    TPO_DESCRICAO       NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDU_ALUNO_OCORRENCIA ─────────────────────────────────────────
+IF OBJECT_ID('dbo.EDU_ALUNO_OCORRENCIA', 'U') IS NULL
+CREATE TABLE EDU_ALUNO_OCORRENCIA (
+    OCORRENCIA_COD       INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    TMH_COD              INT NOT NULL,
+    PES_COD_PROFESSOR    INT NULL,
+    ESC_COD              INT NULL,
+    TMA_COD              INT NULL,
+    TIPO_OCORRENCIA_COD  INT NULL,
+    AOC_TITULO           NVARCHAR(255) NULL,
+    AOC_DESCRICAO        NVARCHAR(MAX) NULL,
+    AOC_DT_OCORRENCIA    DATETIME2 NULL,
+    AOC_RESP_CIENTE      BIT NOT NULL DEFAULT 0,
+    AOC_DT_CIENCIA_RESP  DATETIME2 NULL,
+    USR_CODIGO_RESP      INT NULL,
+    AOC_ANO_LETIVO       INT NULL,
+    AOC_EXIGIR_CONHECIMENTO BIT NOT NULL DEFAULT 0
+);
+GO
+
+-- ─── EDU_AUTORIZACAO_DE_SAIDA (portadores cadastrados) ────────────
+IF OBJECT_ID('dbo.EDU_AUTORIZACAO_DE_SAIDA', 'U') IS NULL
+CREATE TABLE EDU_AUTORIZACAO_DE_SAIDA (
+    AUT_COD       INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    PES_COD_ALUNO INT NOT NULL,
+    CEP_NOME      NVARCHAR(255) NULL,
+    CEP_RESP      CHAR(11) NULL,                   -- CPF do portador
+    CEP_PARENTESCO NVARCHAR(60) NULL
+);
+GO
+
+-- ─── GER_PADRAO_EMAIL (templates de email) ────────────────────────
+IF OBJECT_ID('dbo.GER_PADRAO_EMAIL', 'U') IS NULL
+CREATE TABLE GER_PADRAO_EMAIL (
+    EMA_COD       INT NOT NULL PRIMARY KEY,
+    EMA_ASSUNTO   NVARCHAR(255) NULL,
+    EMA_CONTEUDO  NVARCHAR(MAX) NULL
+);
+GO
+
+-- ─── EDC_AUTORIZACOES (autorizações enviadas pela escola) ─────────
+IF OBJECT_ID('dbo.EDC_AUTORIZACOES', 'U') IS NULL
+CREATE TABLE EDC_AUTORIZACOES (
+    AUT_COD               INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    AUT_TITULO            NVARCHAR(255) NULL,
+    AUT_DESCRICAO         NVARCHAR(MAX) NULL,
+    AUT_TIPO_SOLICITACAO  CHAR(1) NULL,            -- 'A' = aprovação, 'P' = presença
+    AUT_DT                DATETIME2 NOT NULL DEFAULT GETDATE(),
+    CUR_COD               NVARCHAR(50) NULL,       -- pode ter múltiplos separados por vírgula
+    AUT_ESC_COD           NVARCHAR(50) NULL,
+    AUT_TMA_COD           INT NULL
+);
+GO
+
+-- ─── EDC_RESPOSTAS_AUTORIZACAO ────────────────────────────────────
+IF OBJECT_ID('dbo.EDC_RESPOSTAS_AUTORIZACAO', 'U') IS NULL
+CREATE TABLE EDC_RESPOSTAS_AUTORIZACAO (
+    RA_ID             INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    RA_AUT_COD        INT NOT NULL,
+    RA_PES_COD_ALUNO  INT NOT NULL,
+    RA_RESPONSAVEL    NVARCHAR(255) NULL,
+    RA_RESPOSTA       NVARCHAR(50) NULL,
+    TMH_COD           INT NULL,
+    RA_DT_RESPOSTA    DATETIME2 NOT NULL DEFAULT GETDATE()
+);
+GO
+
+-- ─── EDC_TIPO_SOLICITACAO ─────────────────────────────────────────
+IF OBJECT_ID('dbo.EDC_TIPO_SOLICITACAO', 'U') IS NULL
+CREATE TABLE EDC_TIPO_SOLICITACAO (
+    TIP_COD        INT NOT NULL PRIMARY KEY,
+    TIP_DESCRICAO  NVARCHAR(120) NULL
+);
+GO
+
+-- ─── EDC_SOLICITACAO ──────────────────────────────────────────────
+IF OBJECT_ID('dbo.EDC_SOLICITACAO', 'U') IS NULL
+CREATE TABLE EDC_SOLICITACAO (
+    SOL_COD          INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    USR_COD          INT NOT NULL,
+    SOL_TIP          INT NOT NULL,
+    SOL_DADOS        NVARCHAR(MAX) NULL,           -- JSON
+    SOL_STATUS       CHAR(1) NOT NULL DEFAULT 'P', -- 'P','A','R'
+    SOL_DT           DATETIME2 NOT NULL DEFAULT GETDATE(),
+    PES_COD_ALUNO    INT NULL
+);
+GO
+
+-- ─── EDC_ANEXO_SOLICITACAO ────────────────────────────────────────
+IF OBJECT_ID('dbo.EDC_ANEXO_SOLICITACAO', 'U') IS NULL
+CREATE TABLE EDC_ANEXO_SOLICITACAO (
+    ANE_COD       INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    SOL_COD       INT NOT NULL,
+    ANE_NOME      NVARCHAR(255) NULL,
+    ANE_EXTENSAO  NVARCHAR(20) NULL,
+    ANE_ARQUIVO   VARBINARY(MAX) NULL
+);
+GO
+
+PRINT '✓ Schema legado mínimo aplicado.';

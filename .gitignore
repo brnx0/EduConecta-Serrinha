@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Env (per-workspace .gitignore controla regras específicas)
+.env.local
+.env*.local
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+.claude/
+
+# Expo (mobile workspace tem seu próprio .gitignore com mais regras)
+.expo/

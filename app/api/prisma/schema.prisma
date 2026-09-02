@@ -1,0 +1,124 @@
+// Schema Prisma para app/api.
+//
+// Banco único: EDU_CORURIPE_M5_DEV (mesmo banco do Maker/Softwell legado).
+// As tabelas mapeadas aqui são CRIADAS pelo app (prefixo EDC_*).
+// Tabelas legadas (GER_PESSOA_FISICA, EDU_ALUNO, FR_REGRAS, etc.) ficam
+// fora do schema Prisma — são acessadas via mssql pool em
+// `infra/legacyDb.ts` para evitar drift / drops acidentais.
+//
+// IMPORTANTE: NÃO USAR `prisma db push` ou `prisma migrate dev` neste
+// banco. Ambos detectam tabelas legadas como "extras" e tentam dropar.
+// Aplicar mudanças via SQL manual (ver `prisma/migrations-manual/`).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+/// Responsável legal cadastrado no app (substitui EDC_USUARIO_RESP feia).
+model Responsavel {
+  id            Int      @id @default(autoincrement())
+  cpf           String   @unique @db.VarChar(11)
+  email         String?  @db.VarChar(255)
+  senhaHash     String   @db.VarChar(255) // argon2id
+  ativo         Boolean  @default(true)
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @default(now()) @updatedAt
+
+  alunos          ResponsavelAluno[]
+  pushTokens      PushToken[]
+  notificacoes    Notificacao[]
+  passwordResets  PasswordReset[]
+
+  @@map("EDC_RESPONSAVEL")
+}
+
+/// Solicitação de reset de senha. Código de 6 dígitos enviado por email,
+/// hash argon2id persistido aqui. Token opaco JWT carrega só o `id` desta
+/// linha (mobile não vê responsavelId nem código). Uso único: marca
+/// `usedAt` ao trocar senha. Após 3 tentativas erradas, invalida (seta
+/// `usedAt`) pra forçar reinício do fluxo.
+model PasswordReset {
+  id             String    @id @default(uuid())
+  responsavelId  Int
+  codeHash       String    @db.VarChar(255)
+  emailEnviado   String    @db.VarChar(255)
+  tentativas     Int       @default(0)
+  expiresAt      DateTime
+  usedAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  responsavel    Responsavel @relation(fields: [responsavelId], references: [id], onDelete: Cascade)
+
+  @@index([responsavelId, createdAt])
+  @@map("EDC_PASSWORD_RESET")
+}
+
+/// Vínculo N:M responsável ↔ aluno. `alunoPesCod` referencia
+/// GER_PESSOA_FISICA.PES_COD (tabela legada). Cache sincronizado no login.
+model ResponsavelAluno {
+  id             Int       @id @default(autoincrement())
+  responsavelId  Int
+  alunoPesCod    Int
+  vinculadoEm    DateTime  @default(now())
+
+  responsavel    Responsavel @relation(fields: [responsavelId], references: [id], onDelete: Cascade)
+
+  @@unique([responsavelId, alunoPesCod])
+  @@index([alunoPesCod])
+  @@map("EDC_RESPONSAVEL_ALUNO")
+}
+
+model PushToken {
+  id         String   @id @default(uuid())
+  userId     Int
+  token      String   @unique
+  platform   String
+  deviceId   String?
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+
+  responsavel Responsavel @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("EDC_PUSH_TOKEN")
+}
+
+model PresencaEvento {
+  id           String        @id @default(uuid())
+  eventId      String        @unique
+  alunoId      String
+  tipo         String
+  ocorridoEm   DateTime
+  recebidoEm   DateTime      @default(now())
+  leitorId     String?
+  notificacoes Notificacao[]
+
+  @@index([alunoId, ocorridoEm])
+  @@map("EDC_PRESENCA_EVENTO")
+}
+
+model Notificacao {
+  id         String         @id @default(uuid())
+  userId     Int
+  eventoId   String
+  titulo     String
+  corpo      String
+  status     String         @default("pendente")
+  tentativas Int            @default(0)
+  ultimoErro String?
+  enviadaEm  DateTime?
+  lidaEm     DateTime?
+  criadaEm   DateTime       @default(now())
+
+  evento     PresencaEvento @relation(fields: [eventoId], references: [id])
+  responsavel Responsavel @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, criadaEm])
+  @@index([status])
+  @@map("EDC_NOTIFICACAO")
+}

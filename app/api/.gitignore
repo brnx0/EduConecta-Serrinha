@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+prisma/migrations/dev.db*
+
+# Scripts one-off de exploração — contém credenciais hardcoded
+scripts/
