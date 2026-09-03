@@ -142,7 +142,7 @@ function ContentDetailModal({ visible, item, onClose }: { visible: boolean, item
                     </ScrollView>
 
                     <View className="p-4 border-t border-slate-100 bg-white">
-                        <TouchableOpacity onPress={onClose} className="w-full bg-blue-600 py-3.5 rounded-xl items-center shadow-lg shadow-blue-300">
+                        <TouchableOpacity onPress={onClose} className="w-full bg-edu-accent py-3.5 rounded-xl items-center shadow-lg">
                             <Text className="text-white font-bold text-base">Fechar</Text>
                         </TouchableOpacity>
                     </View>

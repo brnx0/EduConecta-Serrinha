@@ -238,10 +238,10 @@ function OcorrenciaDetailModal({
                             <TouchableOpacity
                                 onPress={handleConfirmar}
                                 disabled={!termosAceitos || isConfirming}
-                                className={`w-full py-3.5 rounded-xl items-center shadow-sm flex-row justify-center ${(!termosAceitos || isConfirming) ? 'bg-slate-200' : 'bg-blue-600 shadow-blue-300'}`}
+                                className={`w-full py-3.5 rounded-xl items-center shadow-sm flex-row justify-center ${(!termosAceitos || isConfirming) ? 'bg-slate-200' : 'bg-edu-accent'}`}
                             >
                                 {isConfirming ? (
-                                    <ActivityIndicator size="small" color={termosAceitos ? "#64748b" : "#fff"} />
+                                    <ActivityIndicator size="small" color={termosAceitos ? "#fff" : "#94a3b8"} />
                                 ) : (
                                     <>
                                         <Feather name="check-square" size={18} color={(!termosAceitos) ? "#94a3b8" : "white"} />
