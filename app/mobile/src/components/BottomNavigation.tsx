@@ -60,10 +60,10 @@ export function BottomNavigation({
 
   const isFocused = (screen: string) => currentRouteName === screen;
 
-  // Ícone inativo não desce de 0.75: abaixo disso o branco sobre o azul
-  // institucional cai do mínimo de 3:1 pra elemento gráfico.
+  // Tinta escura: sobre o dourado, ícone branco fica em 1.96:1. O inativo
+  // não desce de 0.7 pra não cair do mínimo de 3:1 de elemento gráfico.
   const iconColor = (screen: string) =>
-    isFocused(screen) ? '#FFFFFF' : 'rgba(255,255,255,0.75)';
+    isFocused(screen) ? colors.edu.onPrimary : 'rgba(61,44,16,0.7)';
 
   return (
     <View
@@ -132,16 +132,20 @@ export function BottomNavigation({
               width: 72,
               height: 72,
               borderRadius: 36,
-              backgroundColor: '#FFFFFF',
+              // Azul complementar: círculo branco sobre dourado ficaria em
+              // 1.96:1 e sumiria da barra.
+              backgroundColor: colors.edu.accent,
               alignItems: 'center',
               justifyContent: 'center',
+              borderWidth: 3,
+              borderColor: colors.edu.primary,
               elevation: 10,
-              shadowColor: '#000',
-              shadowOpacity: 0.25,
+              shadowColor: colors.shadowColor,
+              shadowOpacity: 0.3,
               shadowRadius: 10,
             }}
           >
-            <Ionicons name="home" size={30} color={THEME_COLOR} />
+            <Ionicons name="home" size={30} color={colors.white} />
           </Animated.View>
         </TouchableOpacity>
 

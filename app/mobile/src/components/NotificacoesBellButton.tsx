@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useNotificacoesNaoLidas } from '../hooks/useNotificacoesNaoLidas';
+import { colors } from '../constants/colors';
 
 interface Props {
     iconColor?: string;
@@ -14,10 +15,11 @@ interface Props {
  * Sino de notificações com badge de não-lidas. Tap navega pra
  * tela "Notificacoes" no Stack.
  */
+// Defaults pensados pro header dourado: ícone branco ali ficaria em 1.96:1.
 export function NotificacoesBellButton({
-    iconColor = 'white',
-    bgClass = 'bg-white/15',
-    borderClass = 'border border-white/20',
+    iconColor = colors.edu.onPrimary,
+    bgClass = 'bg-black/10',
+    borderClass = 'border border-black/10',
 }: Props) {
     const navigation = useNavigation<any>();
     const { count } = useNotificacoesNaoLidas();

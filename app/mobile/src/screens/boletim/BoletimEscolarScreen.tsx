@@ -17,7 +17,7 @@ const ROW_HEIGHT = 50;
 
 const getCorNota = (nota: number, dtFim: string | null) => {
     if (!dtFim || new Date(dtFim) > new Date()) return '#94a3b8'; // Cinza se ainda não acabou
-    return nota >= 6 ? '#2A93E2' : '#EF4444'; // Azul ou Vermelho
+    return nota >= 6 ? colors.edu.accent : '#EF4444'; // Azul ou Vermelho
 };
 
 const getSituacaoItem = (item: ListagemBoletimEscolar) => {
@@ -30,17 +30,17 @@ const getSituacaoItem = (item: ListagemBoletimEscolar) => {
 // --- Sub-Components (Cells) ---
 
 const HeaderCell = ({ label, width = 80 }: { label: string, width?: number }) => (
-    <View style={{ width, height: ROW_HEIGHT }} className="items-center justify-center border-r border-blue-400/30 px-1">
+    <View style={{ width, height: ROW_HEIGHT }} className="items-center justify-center border-r border-black/15 px-1">
         <Text className="text-white text-[10px] font-bold text-center uppercase">{label}</Text>
     </View>
 );
 
 const BimestreHeader = ({ label }: { label: string }) => (
-    <View style={{ width: 100, height: ROW_HEIGHT }} className="border-r border-blue-400/30">
+    <View style={{ width: 100, height: ROW_HEIGHT }} className="border-r border-black/15">
         <View className="flex-1 items-center justify-center px-1">
             <Text className="text-white text-[10px] font-bold uppercase">{label}</Text>
         </View>
-        <View className="flex-row h-5 border-t border-blue-400/30">
+        <View className="flex-row h-5 border-t border-black/15">
             <View className="flex-1 items-center justify-center"><Text className="text-white text-[9px] font-semibold">Nota</Text></View>
             <View className="w-8 items-center justify-center"><Text className="text-white text-[9px] font-semibold">Falta</Text></View>
         </View>
@@ -69,7 +69,7 @@ const DisciplinaColumn = ({ dados, isFixed }: { dados: ListagemBoletimEscolar[],
     return (
         <View className={isFixed ? "z-10 shadow-lg border-r border-slate-200 bg-white" : ""}>
             {isFixed && (
-                <View style={{ width: 180, height: ROW_HEIGHT, backgroundColor: colors.edu.primary }} className="justify-center px-3 border-b border-blue-400/30">
+                <View style={{ width: 180, height: ROW_HEIGHT, backgroundColor: colors.edu.dark }} className="justify-center px-3 border-b border-black/15">
                     <Text className="text-white font-bold text-xs uppercase">Disciplina</Text>
                 </View>
             )}
@@ -241,7 +241,7 @@ export default function BoletimEscolarScreen() {
                 className="flex-1"
                 contentContainerStyle={{ paddingBottom: 40 }}
                 showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2A93E2']} tintColor="#2A93E2" />}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />}
             >
                 <AlunoCard alunoAtual={aluno!} />
 
@@ -290,9 +290,9 @@ export default function BoletimEscolarScreen() {
                             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-1" bounces={false} overScrollMode="never">
                                 <View>
                                     {/* Header Row */}
-                                    <View style={{ height: ROW_HEIGHT, backgroundColor: colors.edu.primary }} className="flex-row border-b border-blue-400/30">
+                                    <View style={{ height: ROW_HEIGHT, backgroundColor: colors.edu.dark }} className="flex-row border-b border-black/15">
                                         {!fixarDisciplinas && (
-                                            <View style={{ width: 180, height: ROW_HEIGHT, backgroundColor: colors.edu.primary }} className="justify-center px-3 border-r border-blue-400/30">
+                                            <View style={{ width: 180, height: ROW_HEIGHT, backgroundColor: colors.edu.dark }} className="justify-center px-3 border-r border-black/15">
                                                 <Text className="text-white font-bold text-xs uppercase">Disciplina</Text>
                                             </View>
                                         )}
@@ -353,7 +353,7 @@ const InfoBlockItem = ({ label, value }: { label: string, value: string | number
 
 const LoadingState = () => (
     <View className="flex-1 justify-center items-center mt-6">
-        <ActivityIndicator size="large" color={colors.edu.primary} />
+        <ActivityIndicator size="large" color={colors.edu.dark} />
         <Text className="text-slate-400 mt-2">Carregando notas...</Text>
     </View>
 );
@@ -365,7 +365,7 @@ const ErrorState = ({ onRetry }: { onRetry: () => void }) => (
         </View>
         <Text className="text-amber-800 font-bold text-base text-center mb-1">Ops! Algo deu errado</Text>
         <Text className="text-amber-700 text-sm text-center mb-4">Não foi possível carregar as informações.</Text>
-        <TouchableOpacity onPress={onRetry} className="px-6 py-2.5 rounded-xl bg-edu-primary active:opacity-80">
+        <TouchableOpacity onPress={onRetry} className="px-6 py-2.5 rounded-xl bg-edu-dark active:opacity-80">
             <Text className="text-white font-bold">Tentar novamente</Text>
         </TouchableOpacity>
     </View>

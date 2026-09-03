@@ -89,7 +89,7 @@ export default function FrequenciaDiariaScreen() {
                                     key={m}
                                     onPress={() => setMes(i)}
                                     className="px-4 py-2 rounded-full"
-                                    style={{ backgroundColor: ativo ? colors.edu.primary : '#f1f5f9' }}
+                                    style={{ backgroundColor: ativo ? colors.edu.dark : '#f1f5f9' }}
                                 >
                                     <Text className="text-xs font-bold" style={{ color: ativo ? '#fff' : '#64748b' }}>{m}</Text>
                                 </TouchableOpacity>
@@ -101,7 +101,7 @@ export default function FrequenciaDiariaScreen() {
                 <ScrollView
                     className="flex-1"
                     contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.primary]} tintColor={colors.edu.primary} />}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />}
                     showsVerticalScrollIndicator={false}
                 >
                     {loading && !refreshing ? (

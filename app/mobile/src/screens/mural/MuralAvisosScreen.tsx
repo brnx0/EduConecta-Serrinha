@@ -261,7 +261,7 @@ export default function MuralAvisosScreen() {
                         </View>
                     }
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.primary]} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} />
                     }
                 />
             )}

@@ -106,7 +106,7 @@ export default function LoginScreen() {
             />
 
             <Text className="text-slate-500 text-lg mt-2">
-              Bem-vindo ao <Text className="font-bold text-edu-primary">EduConecta</Text>
+              Bem-vindo ao <Text className="font-bold text-edu-dark">EduConecta</Text>
             </Text>
           </View>
 
@@ -151,7 +151,7 @@ export default function LoginScreen() {
           {/* --- ESQUECEU A SENHA --- */}
           <View className="items-end mt-1">
             <TouchableOpacity onPress={() => setVisibleModal(true)} className='h-10'>
-              <Text className="text-edu-primary text-sm font-semibold">Esqueceu sua senha ? </Text>
+              <Text className="text-edu-dark text-sm font-semibold">Esqueceu sua senha ? </Text>
             </TouchableOpacity>
           </View>
           {/* --- BOTÃO DE AÇÃO --- */}
@@ -159,7 +159,7 @@ export default function LoginScreen() {
             <TouchableOpacity
               onPress={handleAutenticar}
               disabled={isLoading}
-              className={`w-full h-14 rounded-xl items-center justify-center shadow-lg shadow-blue-500/30 ${isLoading ? 'bg-edu-primary/70' : 'bg-edu-primary'}`}
+              className={`w-full h-14 rounded-xl items-center justify-center shadow-lg shadow-black/20 ${isLoading ? 'bg-edu-dark/70' : 'bg-edu-dark'}`}
             >
               {isLoading ? (
                 <ActivityIndicator color="white" />
@@ -173,7 +173,7 @@ export default function LoginScreen() {
           <View className="flex-row justify-center mt-8">
             <Text className="text-slate-500">Não tem conta? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('PrimeiroAcessoScreen', {})}>
-              <Text className="text-edu-primary font-bold">Primeiro Acesso</Text>
+              <Text className="text-edu-dark font-bold">Primeiro Acesso</Text>
             </TouchableOpacity>
           </View>
 

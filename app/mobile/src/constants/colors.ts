@@ -1,83 +1,92 @@
 /**
  * Paleta institucional — Prefeitura Municipal de Serrinha/BA.
  *
- * Hex extraídos do site oficial (serrinha.ba.gov.br): azul dominante das
- * seções, azul do rodapé e dourado dos destaques.
+ * Hex extraídos do site oficial (serrinha.ba.gov.br). O dourado da cidade
+ * é a cor primária; o azul institucional entra como complementar.
  *
- * Contraste (WCAG 2.1, texto branco por cima):
- *   primary #0083DB → 3.98:1  — só título/ícone grande (AA large)
- *   deep    #005FCC → 5.99:1  — seguro pra texto normal (AA)
- *   gold    #EDAE44 → usar SEMPRE com texto escuro (10.7:1 com ink)
+ * Harmonia: dourado ~38° e azul ~218° no círculo cromático — complementares
+ * quase exatos. O laranja queimado é o mesmo matiz do dourado, só mais
+ * escuro, então a escala quente é monocromática e o azul é o contraponto.
  *
- * Regra: superfície grande usa `primary`; qualquer elemento pequeno com
- * texto branco (botão, chip, badge) usa `deep`.
+ * Contraste (WCAG 2.1):
+ *   primary #EDAE44 + onPrimary #3D2C10 → 6.86:1  (texto escuro, AA)
+ *   primary #EDAE44 + branco            → 1.96:1  NUNCA usar branco no dourado
+ *   dark    #A05A12 + branco            → 5.30:1  (botões, AA)
+ *   accent  #005FCC + branco            → 5.99:1  (AA)
+ *
+ * Regra: dourado sempre com tinta escura. Qualquer elemento que precise de
+ * texto branco usa `dark` (quente) ou `accent` (frio).
  */
 export const colors = {
   edu: {
-    primary: '#0083DB',     // Azul institucional — headers, faixas, superfícies
-    dark: '#005FCC',        // Azul do rodapé oficial — botões, foco, bordas
-    darker: '#00479B',      // Pressionado / gradiente
-    accent: '#EDAE44',      // Dourado — destaques (texto escuro por cima)
-    background: '#F3F4F6',  // Fundo geral (mesmo do site oficial)
+    primary: '#EDAE44',     // Dourado da cidade — headers, faixas, superfícies
+    onPrimary: '#3D2C10',   // Tinta escura obrigatória sobre o dourado
+    light: '#F7D48E',       // Dourado claro — fundos de chip, estados hover
+    dark: '#A05A12',        // Laranja queimado — botões, foco (texto branco)
+    darker: '#7A4109',      // Pressionado
+    accent: '#005FCC',      // Azul institucional — complementar, links, ativo
+    accentLight: '#E6F0FC', // Azul lavado — fundo de destaque frio
+    background: '#F7F5F0',  // Fundo neutro quente (acompanha o dourado)
     surface: '#FFFFFF',     // Cards
     text: '#394053',        // Azul-ardósia — texto principal
     input: '#FFFFFF',       // Fundo de inputs
-    placeholder: '#9CA3AF', // Placeholder / texto auxiliar
-    border: '#E5E7EB',      // Bordas neutras
+    placeholder: '#9A948A', // Placeholder / texto auxiliar (neutro quente)
+    border: '#E7E3DA',      // Bordas neutras quentes
   },
 
   // Neutros
   white: '#FFFFFF',
   black: '#000000',
 
-  // Cinzas
-  gray50: '#F9FAFB',
-  gray100: '#F3F4F6',
-  gray200: '#E5E7EB',
-  gray300: '#D1D5DB',
-  gray400: '#9CA3AF',
-  gray500: '#6B7280',
+  // Cinzas — levemente aquecidos pra não brigar com o dourado
+  gray50: '#FAF9F6',
+  gray100: '#F7F5F0',
+  gray200: '#E7E3DA',
+  gray300: '#D3CEC3',
+  gray400: '#9A948A',
+  gray500: '#6E6961',
   gray600: '#4B5563',
   gray700: '#374151',
   gray800: '#394053',
   gray900: '#1F2430',
 
-  // Estados — verde e vermelho vindos da paleta do site oficial
+  // Estados — verde e vermelho da própria paleta do site oficial
   success: '#5F8F2E',
   error: '#B02B2C',
-  warning: '#EDAE44',
-  info: '#0083DB',
+  warning: '#A05A12',
+  info: '#005FCC',
 
   // Aliases (evitam refactor massivo)
-  primary: '#0083DB',
-  primaryMain: '#0083DB',
-  primaryDarker: '#005FCC',
-  secondary: '#EDAE44',
-  secondaryDarker: '#C98F2E',
+  primary: '#EDAE44',
+  primaryMain: '#EDAE44',
+  primaryDarker: '#A05A12',
+  secondary: '#005FCC',
+  secondaryDarker: '#00479B',
 
-  // Sombras
-  shadowColor: '#00479B',
+  // Sombras — marrom quente, não preto puro
+  shadowColor: '#4A3208',
 };
 
 export const componentColors = {
-  // Switch
-  switchTrackFalse: '#E5E7EB',
-  switchTrackTrue: '#0083DB',
-  switchThumbFalse: '#9CA3AF',
+  // Switch — trilho ligado no laranja queimado pra ler sobre fundo claro
+  switchTrackFalse: '#E7E3DA',
+  switchTrackTrue: '#A05A12',
+  switchThumbFalse: '#9A948A',
   switchThumbTrue: '#FFFFFF',
 
-  // Botões — `deep` porque carregam texto branco em tamanho normal
-  buttonPrimary: '#005FCC',
-  buttonSecondary: '#394053',
-  buttonDisabled: '#D1D5DB',
+  // Botões — carregam texto branco, então nunca o dourado puro
+  buttonPrimary: '#A05A12',
+  buttonSecondary: '#005FCC',
+  buttonDisabled: '#D3CEC3',
 
   // Cards
   cardBackground: '#FFFFFF',
-  cardBorder: '#E5E7EB',
+  cardBorder: '#E7E3DA',
 
   // Textos
   textPrimary: '#394053',
-  textSecondary: '#4B5563',
-  textDisabled: '#9CA3AF',
+  textSecondary: '#6E6961',
+  textDisabled: '#9A948A',
   textWhite: '#FFFFFF',
+  textOnPrimary: '#3D2C10',
 };

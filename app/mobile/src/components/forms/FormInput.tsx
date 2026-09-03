@@ -38,7 +38,7 @@ export const FormInput = forwardRef<TextInput, FormInputProps>(({
 
             <View
                 className={`w-full h-14 flex-row items-center px-4 rounded-xl border ${
-                    error ? 'border-red-400 bg-red-50' : isFocused ? 'border-edu-primary bg-white' : 'border-slate-200 bg-slate-50'
+                    error ? 'border-red-400 bg-red-50' : isFocused ? 'border-edu-dark bg-white' : 'border-slate-200 bg-slate-50'
                 } ${disabled ? 'opacity-60 bg-slate-100' : ''}`}
             >
                 {icon && (

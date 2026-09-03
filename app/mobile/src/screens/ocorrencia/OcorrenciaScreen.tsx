@@ -372,8 +372,8 @@ export default function OcorrenciasScreen() {
                         <RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh}
-                            colors={[colors.edu.primary]}
-                            tintColor={colors.edu.primary}
+                            colors={[colors.edu.dark]}
+                            tintColor={colors.edu.dark}
                         />
                     }
                     showsVerticalScrollIndicator={false}

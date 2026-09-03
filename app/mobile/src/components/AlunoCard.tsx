@@ -10,17 +10,16 @@ interface AlunoCardProps {
 }
 
 /**
- * Chip de metadado. Fundo branco translúcido em vez de `blue-100`: sobre o
- * azul institucional, cinza sobre azul-claro ficava abaixo do mínimo de
- * contraste.
+ * Chip de metadado. Tinta escura sobre véu preto: no dourado, texto branco
+ * fica em 1.96:1 e some.
  */
 function Chip({ children }: { children: React.ReactNode }) {
     return (
-        <View className="bg-white/20 px-2.5 py-1 rounded-lg shrink-0">
+        <View className="bg-black/10 px-2.5 py-1 rounded-lg shrink-0">
             <Text
-                className="text-white text-[11px] font-bold uppercase"
+                className="text-[11px] font-bold uppercase"
                 numberOfLines={1}
-                style={{ letterSpacing: 0.4 }}
+                style={{ color: colors.edu.onPrimary, letterSpacing: 0.4 }}
             >
                 {children}
             </Text>
@@ -43,20 +42,21 @@ export function AlunoCard({ alunoAtual }: AlunoCardProps) {
                 shadowOffset: { width: 0, height: 4 },
             }}
         >
-            {/* Avatar em dourado: único ponto de destaque do card, e o
-                texto escuro por cima garante leitura. */}
+            {/* Avatar no azul complementar: é o contraponto frio do card
+                dourado e o único ponto que aceita texto branco. */}
             <View
                 className="w-14 h-14 rounded-full items-center justify-center mr-4 flex-none"
                 style={{ backgroundColor: colors.edu.accent }}
             >
-                <Text className="text-2xl font-bold" style={{ color: colors.edu.text }}>
+                <Text className="text-2xl font-bold" style={{ color: colors.white }}>
                     {inicial}
                 </Text>
             </View>
 
             <View className="flex-1">
                 <Text
-                    className="text-white font-bold text-base"
+                    className="font-bold text-base"
+                    style={{ color: colors.edu.onPrimary }}
                     numberOfLines={2}
                 >
                     {normalizarNomePessoal(alunoAtual?.nome)}

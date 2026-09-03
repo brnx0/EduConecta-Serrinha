@@ -150,7 +150,7 @@ export default function HomeScreen() {
   // --- Render ---
   return (
     <View className="flex-1 bg-slate-150">
-      <StatusBar style="light" backgroundColor="transparent" translucent />
+      <StatusBar style="dark" backgroundColor="transparent" translucent />
       <View className="flex-1">
 
 
@@ -159,7 +159,7 @@ export default function HomeScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2A93E2']} tintColor="#2A93E2" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />}
         >
           {loadingData ? (
             <HomeSkeleton />
@@ -172,27 +172,32 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => setModalVisible(true)}
-                  className="flex-row items-center justify-between p-4 rounded-2xl shadow-lg shadow-blue-500/20"
+                  className="flex-row items-center justify-between p-4 rounded-2xl shadow-lg shadow-black/20"
                   style={{ backgroundColor: colors.edu.primary }}
                 >
                   <View className="flex-1 mr-4">
                     <View className="flex-row items-start mb-1">
                       <Text
-                        className="text-white font-bold text-lg mr-2 flex-1"
+                        className="text-edu-onPrimary font-bold text-lg mr-2 flex-1"
                         numberOfLines={2}
                         adjustsFontSizeToFit
                         minimumFontScale={0.75}
                       >
                         {normalizarNomePessoal(aluno?.nome) || "Nome não informado"}
                       </Text>
-                      <Feather name="chevron-down" size={16} color="rgba(255,255,255,0.7)" style={{ marginTop: 4 }} />
+                      <Feather name="chevron-down" size={16} color="rgba(61,44,16,0.7)" style={{ marginTop: 4 }} />
                     </View>
-                    <Text className="text-blue-100 text-sm" numberOfLines={1}>
+                    <Text className="text-edu-onPrimary opacity-80 text-sm" numberOfLines={1}>
                       {aluno?.serie} • {aluno?.turma} • {aluno?.ano_letivo}
                     </Text>
-                    <Text className="text-blue-200 text-xs mt-1" numberOfLines={1}>{aluno?.escola}</Text>
+                    <Text className="text-edu-onPrimary opacity-70 text-xs mt-1" numberOfLines={1}>{aluno?.escola}</Text>
                   </View>
-                  <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center">
+                  {/* Círculo no azul complementar: sobre o dourado é o único
+                      tom que aceita ícone branco. */}
+                  <View
+                    className="w-12 h-12 rounded-full items-center justify-center"
+                    style={{ backgroundColor: colors.edu.accent }}
+                  >
                     <Feather name="user" size={24} color="white" />
                   </View>
                 </TouchableOpacity>
@@ -251,17 +256,13 @@ function HomeHeader({ userName, onLogout }: { userName?: string, onLogout: () =>
       <View className="flex-row items-center justify-between px-6 mb-2">
         <View className="flex-1 mr-4">
           <View className="flex-row items-center mb-1">
-            <Text className="text-white text-xs font-medium uppercase tracking-wider mr-1">Bem-vindo(a),</Text>
-            <Feather name="smile" size={12} color="white" />
+            <Text className="text-edu-onPrimary opacity-75 text-xs font-medium uppercase tracking-wider mr-1">Bem-vindo(a),</Text>
+            <Feather name="smile" size={12} color={colors.edu.onPrimary} />
           </View>
-          <Text className="text-white text-xl font-bold" numberOfLines={1}>{normalizarNomePessoal(userName)}</Text>
+          <Text className="text-edu-onPrimary text-xl font-bold" numberOfLines={1}>{normalizarNomePessoal(userName)}</Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <NotificacoesBellButton
-            iconColor="#3b82f6"
-            bgClass="bg-blue-50"
-            borderClass="border border-blue-100"
-          />
+          <NotificacoesBellButton />
           <TouchableOpacity
             onPress={onLogout}
             style={{
@@ -269,13 +270,13 @@ function HomeHeader({ userName, onLogout }: { userName?: string, onLogout: () =>
               height: 40,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#fef2f2',
+              backgroundColor: 'rgba(0,0,0,0.10)',
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: '#fecaca',
+              borderColor: 'rgba(0,0,0,0.10)',
             }}
           >
-            <Feather name="log-out" size={20} color="#ef4444" />
+            <Feather name="log-out" size={20} color={colors.error} />
           </TouchableOpacity>
         </View>
       </View>
@@ -320,15 +321,18 @@ function QuickAccessMenu({ navigation, disabled }: { navigation: any, disabled: 
     <View className="px-6 mt-6">
       <Text className="text-slate-800 font-bold text-lg">Acesso Rápido</Text>
       <View className="flex-row flex-wrap justify-between gap-y-4 mt-4">
-        <MenuCard disabled={disabled} title="Avisos" icon="bell" color="#F97316" onPress={() => navigation.navigate("MuralAvisosScreen")} />
-        <MenuCard disabled={disabled} title="Boletim" icon="bar-chart-2" color="#7F35B2" onPress={() => navigation.navigate("BoletimEscolarScreen")} />
-        <MenuCard disabled={disabled} title="Horários" icon="clock" color="#2A93E2" onPress={() => navigation.navigate("HorariosScreen")} />
-        <MenuCard disabled={disabled} title="Calendário" icon="calendar" color="#Eab308" onPress={() => navigation.navigate("CalendarioEscolarScreen")} />
-        <MenuCard disabled={disabled} title="Solicitações" icon="file-text" color="#EC4899" onPress={() => navigation.navigate("SolicitacoesScreen")} />
-        <MenuCard disabled={disabled} title="Conteúdo" icon="book" color="#6366f1" onPress={() => navigation.navigate("ConteudoScreen")} />
-        <MenuCard disabled={disabled} title="Frequencia" icon="check-circle" color="#e07a5a" onPress={() => navigation.navigate("FrequenciaScreen")} />
-        <MenuCard disabled={disabled} title="Ocorrências" icon="alert-circle" color="#dc2626" onPress={() => navigation.navigate("OcorrenciaScreen")} />
-        <MenuCard disabled={disabled} title="Autorizações" icon="key" color="#10B981" onPress={() => navigation.navigate("AutorizacoesScreen")} />
+        {/* Paleta restrita: quente da marca + azul complementar, e as duas
+            cores de estado só onde o significado pede (falta / ocorrência).
+            Antes eram 9 matizes arbitrários, que brigavam com o dourado. */}
+        <MenuCard disabled={disabled} title="Avisos" icon="bell" color={colors.edu.dark} onPress={() => navigation.navigate("MuralAvisosScreen")} />
+        <MenuCard disabled={disabled} title="Boletim" icon="bar-chart-2" color={colors.edu.accent} onPress={() => navigation.navigate("BoletimEscolarScreen")} />
+        <MenuCard disabled={disabled} title="Horários" icon="clock" color={colors.secondaryDarker} onPress={() => navigation.navigate("HorariosScreen")} />
+        <MenuCard disabled={disabled} title="Calendário" icon="calendar" color={colors.primaryDarker} onPress={() => navigation.navigate("CalendarioEscolarScreen")} />
+        <MenuCard disabled={disabled} title="Solicitações" icon="file-text" color={colors.edu.accent} onPress={() => navigation.navigate("SolicitacoesScreen")} />
+        <MenuCard disabled={disabled} title="Conteúdo" icon="book" color={colors.secondaryDarker} onPress={() => navigation.navigate("ConteudoScreen")} />
+        <MenuCard disabled={disabled} title="Frequencia" icon="check-circle" color={colors.success} onPress={() => navigation.navigate("FrequenciaScreen")} />
+        <MenuCard disabled={disabled} title="Ocorrências" icon="alert-circle" color={colors.error} onPress={() => navigation.navigate("OcorrenciaScreen")} />
+        <MenuCard disabled={disabled} title="Autorizações" icon="key" color={colors.edu.dark} onPress={() => navigation.navigate("AutorizacoesScreen")} />
 
       </View>
     </View>
@@ -419,7 +423,7 @@ function ErrorState({ onRetry, message }: { onRetry: () => void, message?: strin
       </View>
       <Text className="text-amber-800 font-bold text-base text-center mb-1">Ops! Algo deu errado</Text>
       <Text className="text-amber-700 text-sm text-center mb-4">{message || "Não foi possível carregar as informações."}</Text>
-      <TouchableOpacity onPress={onRetry} className="px-6 py-2.5 rounded-xl bg-edu-primary active:opacity-80">
+      <TouchableOpacity onPress={onRetry} className="px-6 py-2.5 rounded-xl bg-edu-dark active:opacity-80">
         <Text className="text-white font-bold">Tentar novamente</Text>
       </TouchableOpacity>
     </View>
@@ -526,7 +530,7 @@ function StudentModal({ visible, onClose, aluno, listaAlunos, onAlunoChange }: {
                           <Text className="text-blue-600 font-bold text-xs">{nomeSafe.charAt(0)}</Text>
                         </View>
                         <Text className={`font-semibold ${itemAluno.pes_cod === aluno?.pes_cod ? 'text-blue-700' : 'text-slate-600'}`}>{nomeSafe.split(' ')[0]}</Text>
-                        {itemAluno.pes_cod === aluno?.pes_cod && <View className="ml-auto"><Feather name="check" size={16} color="#2A93E2" /></View>}
+                        {itemAluno.pes_cod === aluno?.pes_cod && <View className="ml-auto"><Feather name="check" size={16} color={colors.edu.dark} /></View>}
                       </TouchableOpacity>
                     );
                   })}

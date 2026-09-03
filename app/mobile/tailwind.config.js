@@ -7,16 +7,19 @@ module.exports = {
       // Ver app/mobile/src/constants/colors.ts para as notas de contraste.
       colors: {
         edu: {
-          primary: '#0083DB',    // Azul institucional (superfícies grandes)
-          dark: '#005FCC',       // Azul do rodapé oficial (botões/foco)
-          darker: '#00479B',     // Pressionado
-          accent: '#EDAE44',     // Dourado (sempre com texto escuro)
-          background: '#F3F4F6', // Fundo leve
-          surface: '#FFFFFF',    // Cards
-          text: '#394053',       // Azul-ardósia
-          input: '#FFFFFF',      // Fundo input
-          placeholder: '#9CA3AF',// Texto ajuda
-          border: '#E5E7EB'      // Bordas neutras
+          primary: '#EDAE44',     // Dourado da cidade (só com texto escuro)
+          onPrimary: '#3D2C10',   // Tinta escura sobre o dourado
+          light: '#F7D48E',       // Dourado claro (chips, hover)
+          dark: '#A05A12',        // Laranja queimado (botões/foco)
+          darker: '#7A4109',      // Pressionado
+          accent: '#005FCC',      // Azul institucional (complementar)
+          accentLight: '#E6F0FC', // Azul lavado
+          background: '#F7F5F0',  // Fundo neutro quente
+          surface: '#FFFFFF',     // Cards
+          text: '#394053',        // Azul-ardósia
+          input: '#FFFFFF',       // Fundo input
+          placeholder: '#9A948A', // Texto ajuda
+          border: '#E7E3DA'       // Bordas neutras quentes
         }
       },
       fontFamily: {

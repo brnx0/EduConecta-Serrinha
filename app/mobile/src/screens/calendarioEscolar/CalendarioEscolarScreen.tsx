@@ -89,7 +89,7 @@ function CalendarGrid({ grid, colorMap, isLoading, onDayPress }: any) {
 function CalendarSkeleton() {
     return (
         <View className="rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm p-3 mb-6 h-[320px] justify-center items-center">
-            <ActivityIndicator size="large" color={colors.edu.primary} />
+            <ActivityIndicator size="large" color={colors.edu.dark} />
             <Text className="mt-4 text-base text-gray-700">Carregando calendário...</Text>
         </View>
     );
@@ -379,7 +379,7 @@ export default function CalendarioEscolarScreen() {
                         <View className="mx-4 mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5 items-center">
                             <Feather name="alert-triangle" size={24} color="#F59E0B" />
                             <Text className="text-amber-800 font-bold mt-2">Ops! Algo deu errado</Text>
-                            <TouchableOpacity onPress={handleRetry} className="mt-4 px-6 py-2 bg-edu-primary rounded-xl">
+                            <TouchableOpacity onPress={handleRetry} className="mt-4 px-6 py-2 bg-edu-dark rounded-xl">
                                 <Text className="text-white font-bold">Tentar Novamente</Text>
                             </TouchableOpacity>
                         </View>

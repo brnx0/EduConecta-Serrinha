@@ -236,7 +236,7 @@ export default function ConteudoScreen() {
                     className="flex-1"
                     contentContainerStyle={{ paddingBottom: 40 }}
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.primary]} tintColor={colors.edu.primary} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />
                     }
                     keyboardShouldPersistTaps="handled" // Importante para fechar teclado ao clicar fora
                     showsVerticalScrollIndicator={false}

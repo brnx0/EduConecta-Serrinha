@@ -129,7 +129,7 @@ export default function FrequenciaScreen() {
                 <ScrollView
                     className="flex-1"
                     contentContainerStyle={{ paddingBottom: 40 }}
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.primary]} tintColor={colors.edu.primary} />}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />}
                     showsVerticalScrollIndicator={false}
                 >
                     <AlunoCard alunoAtual={aluno!} />
@@ -140,7 +140,7 @@ export default function FrequenciaScreen() {
                         <View className="mx-4 mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5 items-center">
                             <Feather name="alert-triangle" size={24} color="#F59E0B" />
                             <Text className="text-amber-800 font-bold mt-2">Ops! Algo deu errado</Text>
-                            <TouchableOpacity onPress={carregar} className="mt-4 px-6 py-2 rounded-xl" style={{ backgroundColor: colors.edu.primary }}>
+                            <TouchableOpacity onPress={carregar} className="mt-4 px-6 py-2 rounded-xl" style={{ backgroundColor: colors.edu.dark }}>
                                 <Text className="text-white font-bold">Tentar Novamente</Text>
                             </TouchableOpacity>
                         </View>
@@ -180,7 +180,7 @@ export default function FrequenciaScreen() {
                             >
                                 <View className="flex-row items-center">
                                     <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: '#eff6ff' }}>
-                                        <Feather name="list" size={18} color={colors.edu.primary} />
+                                        <Feather name="list" size={18} color={colors.edu.dark} />
                                     </View>
                                     <Text className="text-slate-700 font-bold text-sm ml-3">Presença dia a dia</Text>
                                 </View>

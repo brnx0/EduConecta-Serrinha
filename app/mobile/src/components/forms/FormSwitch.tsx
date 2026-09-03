@@ -29,7 +29,7 @@ export function FormSwitch({
             {/* Campo */}
             <View className="border border-gray-300 rounded-lg h-12 px-4 bg-white flex-row items-center justify-between">
                 <Text
-                    className={`text-sm font-semibold ${value ? 'text-edu-primary' : 'text-slate-400'
+                    className={`text-sm font-semibold ${value ? 'text-edu-dark' : 'text-slate-400'
                         }`}
                 >
                     {value ? onLabel : offLabel}
@@ -43,7 +43,7 @@ export function FormSwitch({
                     <Switch
                         value={value}
                         onValueChange={onChange}
-                        trackColor={{ false: '#CBD5E1', true: colors.edu.primary }}
+                        trackColor={{ false: '#CBD5E1', true: colors.edu.dark }}
                         thumbColor="#ffffff"
                     />
                 </View>

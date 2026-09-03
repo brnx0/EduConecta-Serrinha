@@ -51,22 +51,27 @@ export function Header({
                 containerStyle
             ]}
         >
-            <StatusBar style="light" backgroundColor="transparent" translucent />
+            {/* Ícones escuros: o dourado é claro demais pra barra clara. */}
+            <StatusBar style="dark" backgroundColor="transparent" translucent />
             <View className="flex-row items-center justify-between px-6 mb-2">
 
                 {showBack ? (
                     <TouchableOpacity
                         onPress={handleGoBack}
-                        className="w-10 h-10 bg-white/20 rounded-xl items-center justify-center"
+                        className="w-10 h-10 bg-black/10 rounded-xl items-center justify-center"
                         activeOpacity={0.7}
                     >
-                        <Ionicons name="chevron-back" size={24} color="#FFF" />
+                        <Ionicons name="chevron-back" size={24} color={colors.edu.onPrimary} />
                     </TouchableOpacity>
                 ) : (
                     <View className="w-10" />
                 )}
 
-                <Text className="text-white text-lg font-bold text-center flex-1 mx-2" numberOfLines={1}>
+                <Text
+                    className="text-lg font-bold text-center flex-1 mx-2"
+                    style={{ color: colors.edu.onPrimary }}
+                    numberOfLines={1}
+                >
                     {title}
                 </Text>
 

@@ -24,7 +24,7 @@ interface HorarioSemanal {
 
 const PERIODOS_TODOS = ['1º', '2º', '3º', '4º', '5º', '6º', '7º', '8º', '9º', '10º', '11º', '12º'];
 const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-const THEME_COLOR = colors.edu.primary;
+const THEME_COLOR = colors.edu.dark;
 
 const MAPA_DIA_NOME: { [key: number]: string } = {
     1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado',
@@ -309,7 +309,7 @@ export default function HorariosScreen() {
                 <ScrollView
                     className="flex-1"
                     contentContainerStyle={{ paddingBottom: 40 }}
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2A93E2']} tintColor="#2A93E2" />}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.edu.dark]} tintColor={colors.edu.dark} />}
                     showsVerticalScrollIndicator={false}
                 >
                     <AlunoCard alunoAtual={aluno!} />
@@ -322,7 +322,7 @@ export default function HorariosScreen() {
                         <View className="mx-4 mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5 items-center">
                             <Feather name="alert-triangle" size={24} color="#F59E0B" />
                             <Text className="text-amber-800 font-bold mt-2">Ops! Algo deu errado</Text>
-                            <TouchableOpacity onPress={fetchHorarios} className="mt-4 px-6 py-2 bg-edu-primary rounded-xl">
+                            <TouchableOpacity onPress={fetchHorarios} className="mt-4 px-6 py-2 bg-edu-dark rounded-xl">
                                 <Text className="text-white font-bold">Tentar Novamente</Text>
                             </TouchableOpacity>
                         </View>

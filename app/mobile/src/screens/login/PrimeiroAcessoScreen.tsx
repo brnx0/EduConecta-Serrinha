@@ -313,7 +313,7 @@ export default function PrimeiroAcessoScreen() {
                             <TouchableOpacity
                                 onPress={step === 1 ? handleVerificarDados : handleCriarSenha}
                                 disabled={isLoading}
-                                className={`w-full h-14 rounded-xl items-center justify-center shadow-lg shadow-blue-500/30 ${isLoading ? 'bg-edu-primary/70' : 'bg-edu-primary'}`}
+                                className={`w-full h-14 rounded-xl items-center justify-center shadow-lg shadow-black/20 ${isLoading ? 'bg-edu-dark/70' : 'bg-edu-dark'}`}
                             >
                                 {isLoading ? (
                                     <ActivityIndicator color="white" />

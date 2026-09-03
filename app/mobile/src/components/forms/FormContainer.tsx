@@ -34,9 +34,9 @@ export function FormContainer({
           )}
 
           <View>
-            <Text className="text-white opacity-80 text-xs font-bold uppercase">EduConecta</Text>
-            <Text className="text-white text-xl font-bold">{titulo}</Text>
-            {subtitulo && <Text className="text-white opacity-90 text-xs">{subtitulo}</Text>}
+            <Text className="text-edu-onPrimary opacity-70 text-xs font-bold uppercase">EduConecta</Text>
+            <Text className="text-edu-onPrimary text-xl font-bold">{titulo}</Text>
+            {subtitulo && <Text className="text-edu-onPrimary opacity-80 text-xs">{subtitulo}</Text>}
           </View>
         </View>
       </View>
