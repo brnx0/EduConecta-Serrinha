@@ -13,17 +13,11 @@
     "api:dev": "npm --workspace app/api run dev",
     "api:test": "npm --workspace app/api run test",
     "api:build": "npm --workspace app/api run build",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "mobile:ios": "npm --workspace app/mobile run ios"
   },
   "overrides": {
     "postcss": "8.4.49",
     "tailwindcss": "3.3.2",
     "postcss-nested": "5.0.6"
-  },
-  "dependencies": {
-    "expo": "~54.0.34",
-    "react": "19.1.0",
-    "react-native": "0.81.5"
   }
 }
