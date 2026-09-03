@@ -13,7 +13,8 @@ export default function App() {
       <AlertProvider>
         <AlunoProvider>
           <LoadingProvider>
-            <StatusBar style="light" backgroundColor={colors.edu.primary} />
+            {/* Ícones escuros: o dourado é claro demais pra barra clara. */}
+            <StatusBar style="dark" backgroundColor={colors.edu.primary} />
             <Routes />
           </LoadingProvider>
         </AlunoProvider>

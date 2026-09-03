@@ -29,6 +29,10 @@ const VARIANTS = {
   success: { bg: colors.success, text: colors.white, border: 'transparent' },
 } as const;
 
+// Rótulo do estado desabilitado. Branco sobre o cinza de desabilitado dá
+// 1.57:1 — o botão some da tela. Este cinza escuro fica em 4.90:1.
+const DISABLED_LABEL = colors.gray600;
+
 const SIZES = {
   small: { padding: "px-4 py-2.5", radius: 10, font: 14, minHeight: 40 },
   medium: { padding: "px-6 py-3.5", radius: 12, font: 15, minHeight: 48 },
@@ -81,13 +85,13 @@ export default function Button({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator size="small" color={isDisabled ? colors.white : v.text} />
+        <ActivityIndicator size="small" color={isDisabled ? DISABLED_LABEL : v.text} />
       ) : (
         <Text
           className="text-center font-bold"
           numberOfLines={1}
           style={{
-            color: isDisabled ? colors.white : v.text,
+            color: isDisabled ? DISABLED_LABEL : v.text,
             fontSize: s.font,
             letterSpacing: 0.2,
           }}
