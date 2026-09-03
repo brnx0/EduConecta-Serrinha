@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { View, Text, ActivityIndicator, Modal, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { colors } from '../constants/colors';
 
 // Tipagem do que o contexto oferece
 interface LoadingContextData {
@@ -10,6 +11,20 @@ interface LoadingContextData {
 
 const LoadingContext = createContext<LoadingContextData>({} as LoadingContextData);
 
+/**
+ * O overlay é uma View absoluta, não um <Modal>, de propósito.
+ *
+ * Com <Modal>, fechar o loading e abrir o alerta (AlertContext, que também é
+ * <Modal>) caía no mesmo commit do React — as duas chamadas acontecem no
+ * mesmo handler e o React agrupa os setState. O iOS recebia "desmonta A" e
+ * "apresenta B" no mesmo frame, engolia a apresentação de B e ainda podia
+ * deixar A preso na hierarquia, travando o toque na tela inteira.
+ *
+ * Como View absoluta não participa da apresentação de modal do UIKit, a
+ * corrida deixa de existir. Limitação: não cobre um <Modal> aberto pela
+ * tela. Hoje só PrimeiroAcessoScreen usa `showLoading` e ela não tem modal
+ * próprio — se isso mudar, revisar aqui.
+ */
 export function LoadingProvider({ children }: { children: ReactNode }) {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('Carregando...');
@@ -25,22 +40,22 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
 
   return (
     <LoadingContext.Provider value={{ showLoading, hideLoading, isLoading: visible }}>
-      {children}
+      <View style={styles.root}>
+        {children}
 
-      {/* COMPONENTE VISUAL DO LOADING (MODAL) */}
-      <Modal
-        transparent
-        animationType="fade"
-        visible={visible}
-        onRequestClose={() => {}} // Bloqueia o botão voltar do Android enquanto carrega
-      >
-        <View style={styles.overlay}>
-          <View style={styles.container}>
-            <ActivityIndicator size="large" color="#0d9488" />
-            <Text style={styles.text}>{message}</Text>
+        {visible && (
+          <View
+            style={styles.overlay}
+            accessibilityViewIsModal
+            accessibilityLabel={message}
+          >
+            <View style={styles.container}>
+              <ActivityIndicator size="large" color={colors.edu.dark} />
+              <Text style={styles.text}>{message}</Text>
+            </View>
           </View>
-        </View>
-      </Modal>
+        )}
+      </View>
     </LoadingContext.Provider>
   );
 }
@@ -55,18 +70,23 @@ export function useLoading() {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
+  root: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Fundo preto semi-transparente
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 999,
+    elevation: 999,
   },
   container: {
     backgroundColor: 'white',
     padding: 24,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: "#000",
+    shadowColor: colors.shadowColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -77,7 +97,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: '600',
-    color: '#334155', // Slate-700
+    color: colors.edu.text,
     textAlign: 'center'
   }
 });

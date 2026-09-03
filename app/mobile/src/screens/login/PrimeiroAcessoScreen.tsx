@@ -123,12 +123,15 @@ export default function PrimeiroAcessoScreen() {
                 email
             );
 
-            setStep(2);
-        } catch (error: any) {
-            showAlert("Opss!", error.message, "error");
-        } finally {
+            // Fecha o loading antes de qualquer alerta ou navegação — mesma
+            // ordem do handleCriarSenha abaixo.
             hideLoading();
             setIsLoading(false);
+            setStep(2);
+        } catch (error: any) {
+            hideLoading();
+            setIsLoading(false);
+            showAlert("Opss!", error.message, "error");
         }
     };
 
