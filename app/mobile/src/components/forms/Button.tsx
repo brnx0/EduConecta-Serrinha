@@ -6,17 +6,34 @@ import {
   type PressableProps,
   ViewStyle,
 } from "react-native";
-import { colors } from "../../constants/colors";
+import { colors, componentColors } from "../../constants/colors";
 import { cn } from "../../util/cn";
 
 interface ButtonProps extends PressableProps {
   label: string;
-  variant?: "primary" | "secondary" | "danger" | "success";
+  variant?: "primary" | "secondary" | "outline" | "danger" | "success";
   size?: "small" | "medium" | "large";
   loading?: boolean;
   disabled?: boolean;
+  fullWidth?: boolean;
   className?: string;
 }
+
+// Hex direto (não classe Tailwind): estes valores vão pro `style` do
+// Pressable, que só aceita cor real.
+const VARIANTS = {
+  primary: { bg: componentColors.buttonPrimary, text: colors.white, border: 'transparent' },
+  secondary: { bg: componentColors.buttonSecondary, text: colors.white, border: 'transparent' },
+  outline: { bg: 'transparent', text: colors.edu.dark, border: colors.edu.dark },
+  danger: { bg: colors.error, text: colors.white, border: 'transparent' },
+  success: { bg: colors.success, text: colors.white, border: 'transparent' },
+} as const;
+
+const SIZES = {
+  small: { padding: "px-4 py-2.5", radius: 10, font: 14, minHeight: 40 },
+  medium: { padding: "px-6 py-3.5", radius: 12, font: 15, minHeight: 48 },
+  large: { padding: "px-8 py-4", radius: 14, font: 16, minHeight: 56 },
+} as const;
 
 export default function Button({
   label,
@@ -24,64 +41,55 @@ export default function Button({
   size = "medium",
   loading = false,
   disabled = false,
+  fullWidth = false,
   className,
   onPress,
   ...props
 }: ButtonProps) {
-  
   const isDisabled = disabled || loading;
-
-  const sizeStyles = {
-    small: "px-4 py-2 rounded-lg",
-    medium: "px-6 py-3 rounded-lg",
-    large: "px-8 py-4 rounded-xl",
-  };
-
-  const variantStyles = {
-    primary: {
-      bg: 'bg-[#2A93E2]', // Cor principal do botão
-      text: colors.white,
-    },
-    secondary: {
-      bg: `bg-[#4B5563]`, // Se for o botão de "Cancelar", geralmente usamos uma cor neutra ou erro
-      text: colors.white,
-    },
-    danger: {
-      bg: `bg-[#EF4444]`,
-      text: colors.white,
-    },
-    success: {
-      bg: `bg-[#10B981]`,
-      text: colors.white,
-    }
-
-  };
-
-  const currentVariant = variantStyles[variant];
+  const v = VARIANTS[variant];
+  const s = SIZES[size];
 
   return (
     <Pressable
       disabled={isDisabled}
       onPress={onPress}
-      // Unimos as classes do Tailwind aqui
-      className={cn("items-center justify-center", sizeStyles[size], className, currentVariant.bg, isDisabled ? 'opacity-50' : '')}
-      // O estilo inline cuida das cores dinâmicas e estados de pressão
+      accessibilityRole="button"
+      accessibilityState={{ disabled: isDisabled, busy: loading }}
+      className={cn("flex-row items-center justify-center", s.padding, className)}
       style={({ pressed }): ViewStyle => ({
-        backgroundColor: currentVariant.bg,
-        opacity: pressed ? 0.8 : 1,
+        backgroundColor: isDisabled ? componentColors.buttonDisabled : v.bg,
+        borderRadius: s.radius,
+        borderWidth: variant === "outline" ? 1.5 : 0,
+        borderColor: isDisabled ? componentColors.buttonDisabled : v.border,
+        minHeight: s.minHeight,
+        minWidth: fullWidth ? undefined : 100,
+        alignSelf: fullWidth ? "stretch" : undefined,
+        opacity: pressed && !isDisabled ? 0.85 : 1,
         transform: [{ scale: pressed && !isDisabled ? 0.98 : 1 }],
-        minWidth: 100,
+        // Sombra só em botão sólido — no outline polui a borda.
+        ...(variant === "outline" || isDisabled
+          ? {}
+          : {
+              elevation: 2,
+              shadowColor: colors.shadowColor,
+              shadowOpacity: 0.2,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 2 },
+            }),
       })}
       {...props}
     >
       {loading ? (
-        <ActivityIndicator size="small" color={currentVariant.text} />
+        <ActivityIndicator size="small" color={isDisabled ? colors.white : v.text} />
       ) : (
         <Text
           className="text-center font-bold"
-          style={{ 
-            color: currentVariant.text, 
-            fontSize: size === "small" ? 14 : 16 
+          numberOfLines={1}
+          style={{
+            color: isDisabled ? colors.white : v.text,
+            fontSize: s.font,
+            letterSpacing: 0.2,
           }}
         >
           {label}

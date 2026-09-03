@@ -14,7 +14,7 @@ interface AnimatedIconProps {
 function AnimatedIcon({ focused, children }: AnimatedIconProps) {
   const scale = useRef(new Animated.Value(focused ? 1.3 : 1)).current;
   const translateY = useRef(new Animated.Value(focused ? -6 : 0)).current;
-  const opacity = useRef(new Animated.Value(focused ? 1 : 0.7)).current;
+  const opacity = useRef(new Animated.Value(focused ? 1 : 0.85)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -31,7 +31,7 @@ function AnimatedIcon({ focused, children }: AnimatedIconProps) {
         bounciness: 6,
       }),
       Animated.timing(opacity, {
-        toValue: focused ? 1 : 0.65,
+        toValue: focused ? 1 : 0.85,
         duration: 150,
         useNativeDriver: true,
       }),
@@ -60,8 +60,10 @@ export function BottomNavigation({
 
   const isFocused = (screen: string) => currentRouteName === screen;
 
+  // Ícone inativo não desce de 0.75: abaixo disso o branco sobre o azul
+  // institucional cai do mínimo de 3:1 pra elemento gráfico.
   const iconColor = (screen: string) =>
-    isFocused(screen) ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+    isFocused(screen) ? '#FFFFFF' : 'rgba(255,255,255,0.75)';
 
   return (
     <View

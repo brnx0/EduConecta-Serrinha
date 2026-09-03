@@ -3,15 +3,20 @@ module.exports = {
   content: ["./App.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      // Paleta institucional da Prefeitura de Serrinha/BA.
+      // Ver app/mobile/src/constants/colors.ts para as notas de contraste.
       colors: {
         edu: {
-          primary: '#2A93E2',    // Azul Principal
-          dark: '#216FAA',       // Azul Escuro (Bordas/Foco)
-          accent: '#7F35B2',     // Roxo (Detalhes/Links)
+          primary: '#0083DB',    // Azul institucional (superfícies grandes)
+          dark: '#005FCC',       // Azul do rodapé oficial (botões/foco)
+          darker: '#00479B',     // Pressionado
+          accent: '#EDAE44',     // Dourado (sempre com texto escuro)
           background: '#F3F4F6', // Fundo leve
-          text: '#1F2937',       // Texto escuro
+          surface: '#FFFFFF',    // Cards
+          text: '#394053',       // Azul-ardósia
           input: '#FFFFFF',      // Fundo input
-          placeholder: '#9CA3AF' // Texto ajuda
+          placeholder: '#9CA3AF',// Texto ajuda
+          border: '#E5E7EB'      // Bordas neutras
         }
       },
       fontFamily: {
