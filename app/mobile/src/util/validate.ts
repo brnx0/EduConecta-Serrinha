@@ -20,3 +20,14 @@ export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
+
+// DD/MM/AAAA que existe no calendário e não é futura. `new Date` rola
+// 31/02 pra 02/03 sem erro, então confere se dia/mês/ano voltam iguais.
+export const validateDataNascimento = (data: string): boolean => {
+  const m = data.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return false;
+  const [dia, mes, ano] = [+m[1], +m[2], +m[3]];
+  const dt = new Date(ano, mes - 1, dia);
+  const existe = dt.getFullYear() === ano && dt.getMonth() === mes - 1 && dt.getDate() === dia;
+  return existe && ano >= 1900 && dt.getTime() <= Date.now();
+};

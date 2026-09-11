@@ -1,6 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { z } from 'zod';
 import { validarPrimeiroAcesso, criarUsuario, login } from '../services/authService.js';
+import { isDataPassadaValida } from '../lib/time.js';
 
 const cpfRegex = /^\d{11}$/;
 const dataIsoRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -11,7 +12,7 @@ const validarSchema = z.object({
   dataNascimentoAluno: z
     .string()
     .regex(dataIsoRegex, 'Data deve estar no formato ISO YYYY-MM-DD')
-    .refine((v) => !Number.isNaN(new Date(v).getTime()), 'Data inválida'),
+    .refine(isDataPassadaValida, 'Data inválida'),
   email: z.string().email('E-mail inválido').max(255),
 });
 
