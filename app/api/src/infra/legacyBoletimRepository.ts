@@ -47,6 +47,10 @@ export const legacyBoletimRepository = {
         dt_fim_unidade_3: string | null;
         dt_inicio_unidade_4: string | null;
         dt_fim_unidade_4: string | null;
+        nome_unidade_1: string | null;
+        nome_unidade_2: string | null;
+        nome_unidade_3: string | null;
+        nome_unidade_4: string | null;
         perc_frequencia_minima: number;
         media_para_aprovacao: number;
         tipo_avaliacao: string;
@@ -102,6 +106,10 @@ export const legacyBoletimRepository = {
           UNIDADES.DT_FIM_3 AS dt_fim_unidade_3,
           UNIDADES.DT_INICIO_4 AS dt_inicio_unidade_4,
           UNIDADES.DT_FIM_4 AS dt_fim_unidade_4,
+          UNIDADES.NOME_1 AS nome_unidade_1,
+          UNIDADES.NOME_2 AS nome_unidade_2,
+          UNIDADES.NOME_3 AS nome_unidade_3,
+          UNIDADES.NOME_4 AS nome_unidade_4,
           COALESCE(MF.FREQUENCIA, 75) AS perc_frequencia_minima,
           CAST(COALESCE(MF.MEDIA, 5) AS NUMERIC(18, 2)) AS media_para_aprovacao,
           TAV.TPA_TIPO AS tipo_avaliacao,
@@ -161,7 +169,11 @@ export const legacyBoletimRepository = {
               MAX(CASE WHEN NDC.UNIDADE = 3 THEN NDC.DATA_INICIO END) AS DT_INICIO_3,
               MAX(CASE WHEN NDC.UNIDADE = 3 THEN NDC.DATA_FIM    END) AS DT_FIM_3,
               MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_INICIO END) AS DT_INICIO_4,
-              MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_FIM    END) AS DT_FIM_4
+              MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_FIM    END) AS DT_FIM_4,
+              MAX(CASE WHEN U.UNS_ORDEM = 1 THEN U.UNS_DESCRICAO END) AS NOME_1,
+              MAX(CASE WHEN U.UNS_ORDEM = 2 THEN U.UNS_DESCRICAO END) AS NOME_2,
+              MAX(CASE WHEN U.UNS_ORDEM = 3 THEN U.UNS_DESCRICAO END) AS NOME_3,
+              MAX(CASE WHEN U.UNS_ORDEM = 4 THEN U.UNS_DESCRICAO END) AS NOME_4
             FROM EDU_UNIDADE_VI U WITH(NOLOCK)
               INNER JOIN EDU_NOVO_DIARIO_CALENDARIO NDC WITH(NOLOCK)
                 ON (NDC.UNIDADE = U.UNS_ORDEM)

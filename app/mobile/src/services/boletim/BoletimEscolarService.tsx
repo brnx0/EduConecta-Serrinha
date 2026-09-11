@@ -30,6 +30,10 @@ export interface ListagemBoletimEscolar {
     dt_fim_unidade_3: string;
     dt_inicio_unidade_4: string;
     dt_fim_unidade_4: string;
+    nome_unidade_1: string | null;
+    nome_unidade_2: string | null;
+    nome_unidade_3: string | null;
+    nome_unidade_4: string | null;
     perc_frequencia_minima: number;
     media_para_aprovacao: number;
     qtd_unidades: number;

@@ -27,6 +27,11 @@ const getSituacaoItem = (item: ListagemBoletimEscolar) => {
     return item.media >= item.media_para_aprovacao ? "Aprovado" : "Reprovado";
 };
 
+// Nome do período vem do cadastro da escola (EDU_UNIDADE_VI), a mesma fonte
+// do Calendário — assim "trimestre"/"bimestre" nunca diverge entre telas.
+const nomeUnidade = (item: ListagemBoletimEscolar, u: number) =>
+    (item[`nome_unidade_${u}` as keyof ListagemBoletimEscolar] as string | null) || `${u}º Período`;
+
 // --- Sub-Components (Cells) ---
 
 const HeaderCell = ({ label, width = 80 }: { label: string, width?: number }) => (
@@ -296,7 +301,7 @@ export default function BoletimEscolarScreen() {
                                                 <Text className="text-white font-bold text-xs uppercase">Disciplina</Text>
                                             </View>
                                         )}
-                                        {unidadesVisiveis.map(u => <BimestreHeader key={u} label={`${u}º Bimestre`} />)}
+                                        {unidadesVisiveis.map(u => <BimestreHeader key={u} label={nomeUnidade(dados[0], u)} />)}
                                         <HeaderCell label="Média Anual" />
                                         <HeaderCell label="Recup. Final" />
                                         <HeaderCell label="Média Final" />
