@@ -10,7 +10,7 @@ export function EmptyState() {
         Sem notificações ainda
       </Text>
       <Text className="mt-2 text-center text-sm text-gray-500">
-        Quando seu filho passar pelo leitor da escola, você verá os avisos aqui.
+        Quando houver novidades, você receberá notificações aqui.
       </Text>
     </View>
   );
