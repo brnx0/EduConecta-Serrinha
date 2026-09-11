@@ -24,7 +24,7 @@ export const CadastroPortadores = forwardRef<FormHandle, FormProps>((props, ref)
     const [formState, setFormState] = useState({
         nome: dadosFormatados?.payload?.nome || '',
         cpf: dadosFormatados?.payload?.cpf || '',
-        rg: dadosFormatados?.rg || '',
+        rg: dadosFormatados?.payload?.rg || '',
         telefone: dadosFormatados?.payload?.telefone || '',
         parentesco: dadosFormatados?.payload?.parentesco || '',
         aluno: aluno?.pes_cod,
