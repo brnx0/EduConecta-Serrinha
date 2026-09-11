@@ -134,10 +134,7 @@ Padrão: cada nova feature segue `screens/<x>` ↔ `services/<x>`.
 
 ### Camada HTTP
 
-- **`services/api.tsx`** — Cliente axios para a API legada (`EXPO_PUBLIC_URL_API`). Header `Authorization: <token>` (sem Bearer).
-- **`services/apiNotifications.tsx`** — Cliente axios separado para `app/api` (`EXPO_PUBLIC_NOTIF_API_URL`). Header `Authorization: Bearer <token>` (formato `@fastify/jwt`).
-
-Ambos lêem token do `expo-secure-store` via interceptor.
+- **`services/apiNotifications.tsx`** — Único cliente axios, aponta pra `app/api` (`EXPO_PUBLIC_NOTIF_API_URL`). Header `Authorization: Bearer <token>` (formato `@fastify/jwt`), token lido do `expo-secure-store` via interceptor.
 
 ### Persistência local
 

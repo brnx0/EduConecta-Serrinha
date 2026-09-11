@@ -73,7 +73,7 @@ Login DEV: CPF `12345678901` / senha `123456`.
 - **Linguagem:** TypeScript strict
 - **Navegação:** `@react-navigation/native` + bottom-tabs + native-stack
 - **Estilo:** NativeWind 2 (Tailwind) + `tailwind-merge` + `clsx`
-- **HTTP:** axios (2 clients: `api` para API legada, `apiNotifications` para `app/api`)
+- **HTTP:** axios — client único `apiNotifications` apontando pra `app/api` (`EXPO_PUBLIC_NOTIF_API_URL`)
 - **Persistência local:** expo-sqlite + drizzle-orm
 - **Auth:** expo-secure-store + jwt-decode
 - **Notificações:** expo-notifications + expo-device
@@ -127,7 +127,7 @@ Login DEV: CPF `12345678901` / senha `123456`.
 6. Ao criar tela mobile nova: criar service correspondente em `app/mobile/src/services/<dominio>/`
 7. Ao mexer em rota mobile: atualizar `app/mobile/src/routes/index.tsx` e tipagens em `RootStackParamList`
 8. Ao criar endpoint REST novo na API: criar em `app/api/src/routes/<dominio>.ts` + service mobile correspondente em `app/mobile/src/services/<dominio>/` consumindo via `apiNotifications` axios client
-9. Mobile usa `apiNotifications` (axios separado, header `Bearer <token>`) pra falar com `app/api`. Não confundir com `api` (axios legado, header `${token}` sem Bearer)
+9. Mobile usa só `apiNotifications` (header `Bearer <token>`) pra falar com `app/api`. URL única em `EXPO_PUBLIC_NOTIF_API_URL`
 10. Cron e workers em `app/api/src/services/<nome>Worker.ts`, iniciados em `buildApp` quando `NODE_ENV !== 'test'`
 
 ## Git

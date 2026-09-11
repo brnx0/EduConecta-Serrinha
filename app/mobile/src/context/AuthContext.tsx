@@ -2,10 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Autenticar } from '../services/login/LoginService';
 import { jwtDecode } from 'jwt-decode';
-import { api, registerApiInterceptors } from '../services/api';
-import { registerApiNotificationsInterceptors } from '../services/apiNotifications';
+import { registerApiNotificationsInterceptors, type JwtPayload } from '../services/apiNotifications';
 import { useAlert } from './AlertContext';
-import { JwtPayload } from '../services/api';
 
 interface AuthContextData {
     user: JwtPayload | null;
@@ -77,7 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     useEffect(() => {
-        registerApiInterceptors(signOut, showToast);
         registerApiNotificationsInterceptors(signOut, showToast);
     }, [showToast]);
 
