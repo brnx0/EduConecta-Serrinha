@@ -12,10 +12,9 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   LOG_LEVEL: z.string().default('info'),
+  // Banco único: Prisma (tabelas EDC_*) e pool mssql legado (EDU/GER/FR_*)
+  // usam a mesma conexão.
   DATABASE_URL: z.string().min(1),
-  // Override opcional pro pool mssql legado. Banco é o mesmo do
-  // DATABASE_URL; só preencher se um dia legado e EDC_* forem separados.
-  LEGACY_DATABASE_URL: z.string().optional(),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET deve ter no mínimo 32 caracteres'),
   FR_WEBHOOK_SECRET: z
     .string()
@@ -37,9 +36,6 @@ const envSchema = z.object({
 
 const env = envSchema.parse(process.env);
 
-export const config = {
-  ...env,
-  LEGACY_DATABASE_URL: env.LEGACY_DATABASE_URL || env.DATABASE_URL,
-};
+export const config = env;
 
 export type Config = typeof config;

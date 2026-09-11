@@ -9,8 +9,7 @@ import { config } from '../config.js';
  * schema Prisma de propósito, pra um `db push` não tentar dropá-las
  * (ver comentário no topo de prisma/schema.prisma).
  *
- * Usa `config.LEGACY_DATABASE_URL`, que cai em `DATABASE_URL` quando não
- * definida.
+ * Usa `config.DATABASE_URL` — a mesma conexão do Prisma.
  */
 
 function parseSqlServerUrl(url: string): sql.config {
@@ -57,7 +56,7 @@ export async function getLegacyPool(): Promise<sql.ConnectionPool> {
   if (_connectingPromise) return _connectingPromise;
 
   _connectingPromise = (async () => {
-    const cfg = parseSqlServerUrl(config.LEGACY_DATABASE_URL);
+    const cfg = parseSqlServerUrl(config.DATABASE_URL);
     _pool = new sql.ConnectionPool(cfg);
     await _pool.connect();
     return _pool;
