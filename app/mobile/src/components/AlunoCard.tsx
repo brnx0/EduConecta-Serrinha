@@ -62,7 +62,11 @@ export function AlunoCard({ alunoAtual }: AlunoCardProps) {
                     {normalizarNomePessoal(alunoAtual?.nome)}
                 </Text>
 
-                <View className="flex-row flex-wrap items-center mt-2.5 gap-2">
+                {/* Espaço entre chips pelo `gap` nativo do RN, não pela classe
+                    `gap-2`: o NativeWind 2 emula gap com margem negativa no
+                    container, que sobrescrevia o mt-2.5 e puxava os chips 8px
+                    pra cima, por baixo do nome. */}
+                <View className="flex-row flex-wrap items-center mt-2.5" style={{ gap: 8 }}>
                     <Chip>{alunoAtual?.serie} - {alunoAtual?.turma}</Chip>
                     <Chip>{alunoAtual?.turno}</Chip>
                     <Chip>{alunoAtual?.ano_letivo}</Chip>
