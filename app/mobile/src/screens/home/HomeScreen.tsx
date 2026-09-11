@@ -16,6 +16,7 @@ import { getMuralAvisos, ListagemAvisos } from '../../services/mural/MuralAvisoS
 // Utils & Constants
 import { normalizarNomePessoal } from '../../util/FormatarNome';
 import { removerTagsHtml } from '../../util/RemoverTagsHtml';
+import maskCpf from '../../util/mask';
 import { colors } from '../../constants/colors';
 import { AppTabParamList } from '../../navigation/AppTabs';
 
@@ -500,7 +501,7 @@ function StudentModal({ visible, onClose, aluno, listaAlunos, onAlunoChange }: {
               <DetailRow label="Escola" value={aluno?.escola || ''} icon="map-pin" />
               <DetailRow label="Curso" value={aluno?.curso || ''} icon="book-open" />
               <DetailRow label="Série / Turma" value={`${aluno?.serie || ''} - ${aluno?.turma || ''}`} icon="users" />
-              <DetailRow label="CPF" value={aluno?.cpf || ''} icon="credit-card" />
+              <DetailRow label="CPF" value={aluno?.cpf ? maskCpf(aluno.cpf) : ''} icon="credit-card" />
               <DetailRow label="Situação" value={aluno?.situacao || ''} icon="activity" />
             </View>
 
