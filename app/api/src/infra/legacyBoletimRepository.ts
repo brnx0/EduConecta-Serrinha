@@ -47,6 +47,10 @@ export const legacyBoletimRepository = {
         dt_fim_unidade_3: string | null;
         dt_inicio_unidade_4: string | null;
         dt_fim_unidade_4: string | null;
+        nome_unidade_1: string | null;
+        nome_unidade_2: string | null;
+        nome_unidade_3: string | null;
+        nome_unidade_4: string | null;
         perc_frequencia_minima: number;
         media_para_aprovacao: number;
         tipo_avaliacao: string;
@@ -102,6 +106,10 @@ export const legacyBoletimRepository = {
           UNIDADES.DT_FIM_3 AS dt_fim_unidade_3,
           UNIDADES.DT_INICIO_4 AS dt_inicio_unidade_4,
           UNIDADES.DT_FIM_4 AS dt_fim_unidade_4,
+          UNIDADES.NOME_1 AS nome_unidade_1,
+          UNIDADES.NOME_2 AS nome_unidade_2,
+          UNIDADES.NOME_3 AS nome_unidade_3,
+          UNIDADES.NOME_4 AS nome_unidade_4,
           COALESCE(MF.FREQUENCIA, 75) AS perc_frequencia_minima,
           CAST(COALESCE(MF.MEDIA, 5) AS NUMERIC(18, 2)) AS media_para_aprovacao,
           TAV.TPA_TIPO AS tipo_avaliacao,
@@ -161,7 +169,11 @@ export const legacyBoletimRepository = {
               MAX(CASE WHEN NDC.UNIDADE = 3 THEN NDC.DATA_INICIO END) AS DT_INICIO_3,
               MAX(CASE WHEN NDC.UNIDADE = 3 THEN NDC.DATA_FIM    END) AS DT_FIM_3,
               MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_INICIO END) AS DT_INICIO_4,
-              MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_FIM    END) AS DT_FIM_4
+              MAX(CASE WHEN NDC.UNIDADE = 4 THEN NDC.DATA_FIM    END) AS DT_FIM_4,
+              MAX(CASE WHEN U.UNS_ORDEM = 1 THEN U.UNS_DESCRICAO END) AS NOME_1,
+              MAX(CASE WHEN U.UNS_ORDEM = 2 THEN U.UNS_DESCRICAO END) AS NOME_2,
+              MAX(CASE WHEN U.UNS_ORDEM = 3 THEN U.UNS_DESCRICAO END) AS NOME_3,
+              MAX(CASE WHEN U.UNS_ORDEM = 4 THEN U.UNS_DESCRICAO END) AS NOME_4
             FROM EDU_UNIDADE_VI U WITH(NOLOCK)
               INNER JOIN EDU_NOVO_DIARIO_CALENDARIO NDC WITH(NOLOCK)
                 ON (NDC.UNIDADE = U.UNS_ORDEM)
@@ -170,23 +182,22 @@ export const legacyBoletimRepository = {
             WHERE U.SER_COD = T.SER_COD
               AND U.ANO = T.TMA_ANO_LETIVO
           ) UNIDADES
+          -- Média simples das unidades do curso (TPA_QTD_UNIDADE), nota não
+          -- lançada conta como 0. Os pesos TPA_NUME/DENO_UND* são ignorados
+          -- de propósito: o cadastro dá peso 2 ao 3º trimestre (soma 4), e a
+          -- regra definida pro boletim é dividir pelo nº de trimestres.
           CROSS APPLY (
-            SELECT CAST(
-              (
-                (COALESCE(ANF.ENF_NOTA_01, 0) * (TAV.TPA_NUME_UND1 * 1.0 / NULLIF(TAV.TPA_DENO_UND1, 0))) +
-                (COALESCE(ANF.ENF_NOTA_02, 0) * (TAV.TPA_NUME_UND2 * 1.0 / NULLIF(TAV.TPA_DENO_UND2, 0))) +
-                (COALESCE(ANF.ENF_NOTA_03, 0) * (TAV.TPA_NUME_UND3 * 1.0 / NULLIF(TAV.TPA_DENO_UND3, 0))) +
-                (COALESCE(ANF.ENF_NOTA_04, 0) * (TAV.TPA_NUME_UND4 * 1.0 / NULLIF(TAV.TPA_DENO_UND4, 0)))
-              )
-              /
-              NULLIF(
-                (TAV.TPA_NUME_UND1 * 1.0 / NULLIF(TAV.TPA_DENO_UND1, 0)) +
-                (TAV.TPA_NUME_UND2 * 1.0 / NULLIF(TAV.TPA_DENO_UND2, 0)) +
-                (TAV.TPA_NUME_UND3 * 1.0 / NULLIF(TAV.TPA_DENO_UND3, 0)) +
-                (TAV.TPA_NUME_UND4 * 1.0 / NULLIF(TAV.TPA_DENO_UND4, 0))
-              , 0)
-            AS NUMERIC(18, 2)
+            SELECT COALESCE(
+              CAST(SUM(U.nota) * 1.0 / NULLIF(TAV.TPA_QTD_UNIDADE, 0) AS NUMERIC(18, 2)),
+              0
             ) AS media_anual
+            FROM (VALUES
+              (1, COALESCE(ANF.ENF_NOTA_01, 0)),
+              (2, COALESCE(ANF.ENF_NOTA_02, 0)),
+              (3, COALESCE(ANF.ENF_NOTA_03, 0)),
+              (4, COALESCE(ANF.ENF_NOTA_04, 0))
+            ) U(unidade, nota)
+            WHERE U.unidade <= TAV.TPA_QTD_UNIDADE
           ) MA
           CROSS APPLY (
             SELECT

@@ -19,6 +19,7 @@ import { useLoading } from '../../context/LoadingContext';
 
 import { FormInput } from '../../components/forms/FormInput';
 import { CriarUsuario, ValidarPrimeiroAcesso } from '../../services/login/PrimeiroAcessoService';
+import { validateDataNascimento } from '../../util/validate';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes';
 
@@ -100,7 +101,7 @@ export default function PrimeiroAcessoScreen() {
 
         if (!cpf || cpf.length < 14) newErrors.cpf = "CPF incompleto.";
         if (!cpfAluno || cpfAluno.length < 14) newErrors.cpfAluno = "CPF incompleto.";
-        if (!dataNasc || dataNasc.length < 10) newErrors.data_nascimento = "Data inválida.";
+        if (!validateDataNascimento(dataNasc)) newErrors.data_nascimento = "Data inválida.";
         if (!email.trim() || !email.includes('@')) newErrors.email = "E-mail inválido.";
 
         setErrors(newErrors);

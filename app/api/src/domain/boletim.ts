@@ -28,6 +28,11 @@ export interface BoletimItem {
   dt_fim_unidade_3: string | null;
   dt_inicio_unidade_4: string | null;
   dt_fim_unidade_4: string | null;
+  // Nome do período no cadastro (EDU_UNIDADE_VI), ex. "1º TRIMESTRE".
+  nome_unidade_1: string | null;
+  nome_unidade_2: string | null;
+  nome_unidade_3: string | null;
+  nome_unidade_4: string | null;
   perc_frequencia_minima: number;
   media_para_aprovacao: number;
   tipo_avaliacao: string;

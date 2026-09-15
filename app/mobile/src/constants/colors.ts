@@ -50,8 +50,10 @@ export const colors = {
   gray800: '#394053',
   gray900: '#1F2430',
 
-  // Estados — verde e vermelho da própria paleta do site oficial
-  success: '#5F8F2E',
+  // Estados — verde e vermelho da própria paleta do site oficial.
+  // O verde original (#5F8F2E) dava 3.85:1 com texto branco; escurecido
+  // pra 5.13:1 (4.71:1 como texto sobre o fundo #F7F5F0).
+  success: '#4A7A1F',
   error: '#B02B2C',
   warning: '#A05A12',
   info: '#005FCC',

@@ -129,7 +129,14 @@ function EventsSkeleton() {
     );
 }
 
-function Legend() {
+// Termo do período ("trimestre", "bimestre"...) tirado do nome cadastrado da
+// unidade ("1º TRIMESTRE"), pra legenda falar a mesma língua do bloco Unidades.
+function termoPeriodo(diasLetivos: DiaLetivoUnidade[]): string {
+    const termo = diasLetivos[0]?.unidade?.replace(/^\s*\d+\s*[ºª°o.]?\s*/i, '').trim().toLowerCase();
+    return termo || 'período';
+}
+
+function Legend({ termo }: { termo: string }) {
     return (
         <View className="mb-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
             <Text className="font-bold text-base mb-4 text-gray-800">Legenda</Text>
@@ -138,8 +145,8 @@ function Legend() {
                     ['Dias letivos', '#008000'],
                     ['Feriado', '#FF0000'],
                     ['Dias não letivos', '#C0C0C0'],
-                    ['Início de bimestre', '#90EE90'],
-                    ['Encerramento de bimestre', '#FFA500']
+                    [`Início de ${termo}`, '#90EE90'],
+                    [`Encerramento de ${termo}`, '#FFA500']
                 ].map(([label, color]) => (
                     <View key={String(label)} className="flex-row items-center">
                         <View style={{ backgroundColor: color }} className="w-5 h-5 rounded border border-gray-300 mr-2" />
@@ -406,7 +413,7 @@ export default function CalendarioEscolarScreen() {
 
                             <EventsList diasLetivos={diasLetivos} isLoading={isLoadingUnidades} />
 
-                            <Legend />
+                            <Legend termo={termoPeriodo(diasLetivos)} />
                         </View>
                     )}
                 </ScrollView>

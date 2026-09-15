@@ -115,4 +115,4 @@ incluído porque não está no escopo do bootstrap mínimo.
 ## Mudar senha SA
 
 Edita `docker-compose.yml` (`MSSQL_SA_PASSWORD`) + `bootstrap.ps1` (`$saPassword`)
-+ `.env.docker.example` (`DATABASE_URL` + `LEGACY_DATABASE_URL`).
++ `.env.docker.example` (`DATABASE_URL`, usado pelo Prisma e pelo pool legado).

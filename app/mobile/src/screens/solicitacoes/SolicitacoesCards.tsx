@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { formatDatePTBR } from '../../util/FormatDate';
+import maskCpf from '../../util/mask';
 
 interface SolicitacaoCardProps {
     item: Solicitacao;
@@ -55,7 +56,7 @@ export const SolicitacaoCard = ({ item, onEdit, onDelete }: SolicitacaoCardProps
                         </Text>
                         <View className="mt-1">
                             <Text className="text-slate-500 text-sm">Parentesco: {data.parentesco}</Text>
-                            <Text className="text-slate-500 text-sm">CPF: {data.cpf}</Text>
+                            <Text className="text-slate-500 text-sm">CPF: {data.cpf ? maskCpf(String(data.cpf)) : '—'}</Text>
                             {data.telefone && <Text className="text-slate-500 text-sm">Tel: {data.telefone}</Text>}
                         </View>
                     </View>

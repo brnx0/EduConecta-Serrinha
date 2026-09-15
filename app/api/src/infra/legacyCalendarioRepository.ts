@@ -46,8 +46,8 @@ export const legacyCalendarioRepository = {
             ELSE 'Letivo'
           END AS status_dia,
           COALESCE(
-            CASE WHEN M.Data = P.DATA_FIM THEN 'Encerramento do bimestre' ELSE NULL END,
-            CASE WHEN M.Data = P.DATA_INICIO THEN 'Início de bimestre' ELSE NULL END,
+            CASE WHEN M.Data = P.DATA_FIM THEN CONCAT('Encerramento do ', COALESCE(P.NOME, 'período')) ELSE NULL END,
+            CASE WHEN M.Data = P.DATA_INICIO THEN CONCAT('Início do ', COALESCE(P.NOME, 'período')) ELSE NULL END,
             CASE WHEN DATEPART(dw, M.Data) = 7 THEN 'Domingo' ELSE NULL END,
             I.DescricaoMotivo,
             CASE WHEN DATEPART(dw, M.Data) = 6 AND S.ASL_DATA IS NULL THEN 'Sábado não letivo' ELSE NULL END
@@ -73,18 +73,25 @@ export const legacyCalendarioRepository = {
             SELECT TOP 1
               T.TMA_COD,
               T.TMA_ANO_LETIVO,
-              T.CUR_COD
+              T.CUR_COD,
+              T.SER_COD
             FROM EDU_TURMA_ALUNO TA WITH(NOLOCK)
               INNER JOIN EDU_TURMA T WITH(NOLOCK) ON T.TMA_COD = TA.TMA_COD
             WHERE TA.PES_COD_ALUNO = @pesCodAluno
               AND TMA_ANO_LETIVO = @ano
           ) C
+          -- Nome do período vem do cadastro (EDU_UNIDADE_VI, ex. "1º TRIMESTRE"),
+          -- mesma fonte do boletim e do bloco Unidades — nada de "bimestre" fixo.
           OUTER APPLY (
             SELECT TOP 1
               DC.DATA_INICIO,
               DC.DATA_FIM,
+              LOWER(UV.UNS_DESCRICAO) AS NOME,
               1 AS Data
             FROM EDU_NOVO_DIARIO_CALENDARIO DC WITH(NOLOCK)
+              LEFT JOIN EDU_UNIDADE_VI UV WITH(NOLOCK) ON UV.UNS_ORDEM = DC.UNIDADE
+                AND UV.ANO = DC.ANO
+                AND UV.SER_COD = C.SER_COD
             WHERE DC.CUR_COD = C.CUR_COD
               AND DC.ANO = C.TMA_ANO_LETIVO
               AND M.Data BETWEEN DC.DATA_INICIO AND DC.DATA_FIM
@@ -202,7 +209,7 @@ export const legacyCalendarioRepository = {
   },
 
   /**
-   * Total de dias letivos por unidade (bimestre) no ano. Retorna 1 row por
+   * Total de dias letivos por unidade (período letivo) no ano. Retorna 1 row por
    * unidade com data_inicio, data_fim (DD/MM/YYYY) e contagem.
    */
   async findDiasLetivosPorUnidade(input: {

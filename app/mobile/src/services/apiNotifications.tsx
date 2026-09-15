@@ -1,9 +1,22 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-// Cliente axios separado para a nova API de notificações (app/api).
-// Diferente de `api` (services/api.tsx), este envia "Authorization: Bearer <token>"
-// no formato esperado pelo @fastify/jwt.
+// Único cliente HTTP do app — fala com app/api. Envia
+// "Authorization: Bearer <token>" no formato esperado pelo @fastify/jwt.
+export interface AlunoToken {
+    pes_cod: number;
+    nome: string;
+    cpf: string;
+}
+
+export interface JwtPayload {
+    usr_codigo: string;
+    responsavel_nome: string;
+    alunos: AlunoToken[];
+    iat: number;
+    exp: number;
+}
+
 const NOTIF_API_URL = process.env.EXPO_PUBLIC_NOTIF_API_URL ?? 'http://localhost:3333';
 
 export const apiNotifications = axios.create({
