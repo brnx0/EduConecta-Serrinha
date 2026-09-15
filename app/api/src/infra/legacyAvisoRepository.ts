@@ -39,9 +39,12 @@ export const legacyAvisoRepository = {
           A.TITULO AS titulo,
           A.AVISO AS descricao,
           A.IMAGEM AS imagem,
-          A.DATA_CRIACAO AS data_cadastro,
-          A.DATA_INICIO AS data_inicio,
-          A.DATA_FIM AS data_fim
+          -- Datas como texto local (yyyy-MM-ddTHH:mm:ss, sem fuso). Se saírem
+          -- como DATETIME, o driver mssql (useUTC) trata a hora do banco como
+          -- UTC, o JSON leva "Z" e o app mostra 3h a menos.
+          CONVERT(varchar(19), A.DATA_CRIACAO, 126) AS data_cadastro,
+          CONVERT(varchar(19), A.DATA_INICIO, 126) AS data_inicio,
+          CONVERT(varchar(19), A.DATA_FIM, 126) AS data_fim
         FROM EDU_AVISOS A WITH(NOLOCK)
           OUTER APPLY (
             SELECT MAX(AE.AVE_COD) AS ID
