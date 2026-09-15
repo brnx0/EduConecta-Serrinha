@@ -10,6 +10,9 @@ dotenv.config({ path: path.join(__dirname, '..', '.env'), override: true });
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
+  // Interface de escuta. 0.0.0.0 aceita conexões da rede (device físico);
+  // atrás de proxy reverso pode ser 127.0.0.1.
+  HOST: z.string().default('0.0.0.0'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   LOG_LEVEL: z.string().default('info'),
   // Banco único: Prisma (tabelas EDC_*) e pool mssql legado (EDU/GER/FR_*)
