@@ -9,6 +9,7 @@ import { Skeleton } from '../../components/Skeleton';
 import { colors } from '../../constants/colors';
 import { useAluno } from '../../context/AlunoContext';
 import { getMuralAvisos, ListagemAvisos } from '../../services/mural/MuralAvisoService';
+import { parseDataHoraLocal } from '../../util/FormatDate';
 
 // --- Utils (Helpers) ---
 const removerTagsHtml = (htmlString?: string): string => {
@@ -16,10 +17,7 @@ const removerTagsHtml = (htmlString?: string): string => {
     return htmlString.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
 };
 
-const criarData = (dataString: string): Date => {
-    const dataSegura = dataString ? dataString.replace(' ', 'T') : new Date().toISOString();
-    return new Date(dataSegura);
-};
+const criarData = (dataString: string): Date => parseDataHoraLocal(dataString);
 
 const formatarDataExibicao = (dataString: string): string => {
     const data = criarData(dataString);

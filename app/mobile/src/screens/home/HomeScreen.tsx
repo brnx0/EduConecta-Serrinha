@@ -17,6 +17,7 @@ import { getMuralAvisos, ListagemAvisos } from '../../services/mural/MuralAvisoS
 import { normalizarNomePessoal } from '../../util/FormatarNome';
 import { removerTagsHtml } from '../../util/RemoverTagsHtml';
 import maskCpf from '../../util/mask';
+import { parseDataHoraLocal } from '../../util/FormatDate';
 import { colors } from '../../constants/colors';
 import { AppTabParamList } from '../../navigation/AppTabs';
 
@@ -342,7 +343,7 @@ function QuickAccessMenu({ navigation, disabled }: { navigation: any, disabled: 
 
 function NoticeBoard({ avisos, loading, error, onRetry }: { avisos: ListagemAvisos[], loading: boolean, error: string | null, onRetry: () => void }) {
   const formatarData = (dataString: string) => {
-    const data = new Date(dataString);
+    const data = parseDataHoraLocal(dataString);
     return `${data.getDate().toString().padStart(2, '0')}/${(data.getMonth() + 1).toString().padStart(2, '0')}/${data.getFullYear()} ${data.getHours().toString().padStart(2, '0')}:${data.getMinutes().toString().padStart(2, '0')}`;
   };
 
@@ -363,8 +364,7 @@ function NoticeBoard({ avisos, loading, error, onRetry }: { avisos: ListagemAvis
       ) : (
         <>
           {avisos.map((item) => {
-            const dataSegura = item.data_cadastro ? item.data_cadastro.replace(' ', 'T') : new Date().toISOString();
-            const ehNovo = (new Date().getTime() - new Date(dataSegura).getTime()) / (1000 * 60 * 60) <= 48;
+            const ehNovo = (new Date().getTime() - parseDataHoraLocal(item.data_cadastro).getTime()) / (1000 * 60 * 60) <= 48;
 
             return (
               <View key={item.id} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-3">

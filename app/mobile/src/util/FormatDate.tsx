@@ -104,3 +104,23 @@ export const formatarDataBR = (dataString?: string | null): string => {
         return dataString || '-';
     }
 };
+
+/**
+ * Converte data/hora vinda da API em Date.
+ *
+ * Sem fuso ("2026-09-15T15:10:00", com T ou espaço): monta pelos componentes,
+ * sempre hora local. `new Date(string)` nesse formato é tratado como UTC pelo
+ * Hermes (a spec manda tratar como local) — num aparelho em UTC-3 a hora
+ * aparece 3h a menos. O emulador padrão roda em GMT e esconde o problema.
+ *
+ * Com fuso explícito ("Z" ou "-03:00"): é um instante real, usa o parser nativo.
+ */
+export function parseDataHoraLocal(dataString?: string | null): Date {
+    if (!dataString) return new Date();
+
+    const m = dataString.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?$/);
+    if (!m) return new Date(dataString);
+
+    const [, ano, mes, dia, hora = '0', min = '0', seg = '0'] = m;
+    return new Date(+ano, +mes - 1, +dia, +hora, +min, +seg);
+}
