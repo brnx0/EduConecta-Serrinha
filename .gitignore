@@ -27,3 +27,6 @@ Thumbs.db
 
 # Expo (mobile workspace tem seu próprio .gitignore com mais regras)
 .expo/
+
+# Variaveis de ambiente locais. Versionar so os .env.example.
+.env
