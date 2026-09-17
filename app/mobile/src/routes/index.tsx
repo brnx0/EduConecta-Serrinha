@@ -13,6 +13,7 @@ import NotificacoesScreen from '../screens/notificacoes';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { useAluno } from '../context/AlunoContext';
 import { NotificationBootstrap } from '../components/NotificationBootstrap';
+import { colors } from '../constants/colors';
 
 export type RootStackParamList = {
   LoginScreen: undefined;
@@ -42,7 +43,7 @@ function MainNavigator() {
         setDataLoading(false);
         return;
       }
-      setTimeout(()=> {setStatusMessage('Sincronizando informações...')},1000);
+      setTimeout(() => { setStatusMessage('Sincronizando informações...') }, 1000);
       try {
         await preCarregarDados();
         setStatusMessage('Quase lá...');
@@ -66,16 +67,16 @@ function MainNavigator() {
 
   if (showSplash) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#017cbb' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.edu.primary }}>
 
         <Image
           source={require('../../assets/favicon.png')}
           style={{ width: 120, height: 120, resizeMode: 'contain', marginBottom: 20 }}
         />
 
-        <ActivityIndicator size="large" color="#ffffff" />
+        <ActivityIndicator size="large" color={colors.edu.onPrimary} />
 
-        <Text style={{ marginTop: 15, color: '#ffffff', fontSize: 12, fontWeight: '500' }}>
+        <Text style={{ marginTop: 15, color: colors.edu.onPrimary, fontSize: 12, fontWeight: '500' }}>
 
           {loading ? 'Verificando credenciais...' : statusMessage}
         </Text>
